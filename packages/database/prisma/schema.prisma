@@ -1,0 +1,602 @@
+// Morocco Business OS - Enterprise Prisma Schema
+// PostgreSQL 16+ with Decimal Precisions and Moroccan Localization
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---------------------------------------------------------
+// 1. TENANCY, COMPANIES & IAM
+// ---------------------------------------------------------
+
+enum TenantStatus {
+  TRIAL
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+}
+
+enum TenantPlanTier {
+  STARTER
+  BUSINESS
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+model Tenant {
+  id           String         @id @default(uuid()) @db.Uuid
+  slug         String         @unique @db.VarChar(63)
+  name         String         @db.VarChar(255)
+  status       TenantStatus   @default(ACTIVE)
+  planTier     TenantPlanTier @default(BUSINESS)
+  maxUsers     Int            @default(5)
+  maxBranches  Int            @default(2)
+  maxWarehouses Int           @default(2)
+  createdAt    DateTime       @default(now()) @db.Timestamptz
+  updatedAt    DateTime       @updatedAt @db.Timestamptz
+
+  companies         Company[]
+  branches          Branch[]
+  users             User[]
+  roles             Role[]
+  categories        ProductCategory[]
+  uoms              UnitOfMeasure[]
+  products          Product[]
+  warehouses        Warehouse[]
+  stockBalances     StockBalance[]
+  stockMovements    StockMovement[]
+  accounts          Account[]
+  journals          Journal[]
+  journalEntries    JournalEntry[]
+  customers         Customer[]
+  salesInvoices     SalesInvoice[]
+  auditLogs         AuditLog[]
+
+  @@map("tenants")
+}
+
+model Company {
+  id                  String   @id @default(uuid()) @db.Uuid
+  tenantId            String   @unique @db.Uuid @map("tenant_id")
+  legalName           String   @db.VarChar(255) @map("legal_name")
+  commercialName      String?  @db.VarChar(255) @map("commercial_name")
+  legalForm           String   @default("SARL") @db.VarChar(32) @map("legal_form")
+  
+  // Moroccan Legal Identifiers (Mandatory for Compliance)
+  ice                 String   @db.VarChar(15) // Identifiant Commun de l'Entreprise (15 digits)
+  identifiantFiscal   String   @db.VarChar(15) @map("identifiant_fiscal") // IF
+  registreCommerce    String   @db.VarChar(32) @map("registre_commerce") // RC
+  taxeProfessionnelle String   @db.VarChar(32) @map("taxe_professionnelle") // TP
+  cnssNumber          String?  @db.VarChar(32) @map("cnss_number")
+  
+  address             String   @db.Text
+  city                String   @db.VarChar(100)
+  country             String   @default("MA") @db.VarChar(2)
+  phone               String   @db.VarChar(32)
+  email               String   @db.VarChar(255)
+  website             String?  @db.VarChar(255)
+  logoUrl             String?  @db.Text @map("logo_url")
+  baseCurrency        String   @default("MAD") @db.VarChar(3) @map("base_currency")
+  defaultLanguage     String   @default("ar") @db.VarChar(5) @map("default_language")
+  fiscalYearStartMonth Int     @default(1) @db.SmallInt @map("fiscal_year_start_month")
+  createdAt           DateTime @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt           DateTime @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  branches Branch[]
+
+  @@map("companies")
+}
+
+model Branch {
+  id          String   @id @default(uuid()) @db.Uuid
+  tenantId    String   @db.Uuid @map("tenant_id")
+  companyId   String   @db.Uuid @map("company_id")
+  code        String   @db.VarChar(32)
+  name        String   @db.VarChar(255)
+  isMainBranch Boolean  @default(false) @map("is_main_branch")
+  address     String   @db.Text
+  city        String   @db.VarChar(100)
+  phone       String?  @db.VarChar(32)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt   DateTime @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant     Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  company    Company        @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  warehouses Warehouse[]
+  invoices   SalesInvoice[]
+
+  @@unique([tenantId, code])
+  @@map("branches")
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  tenantId     String    @db.Uuid @map("tenant_id")
+  email        String    @db.VarChar(255)
+  passwordHash String    @db.VarChar(255) @map("password_hash")
+  firstName    String    @db.VarChar(100) @map("first_name")
+  lastName     String    @db.VarChar(100) @map("last_name")
+  phone        String?   @db.VarChar(32)
+  isActive     Boolean   @default(true) @map("is_active")
+  mfaEnabled   Boolean   @default(false) @map("mfa_enabled")
+  mfaSecret    String?   @db.VarChar(255) @map("mfa_secret")
+  lastLoginAt  DateTime? @db.Timestamptz @map("last_login_at")
+  createdAt    DateTime  @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt    DateTime  @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  userRoles UserRole[]
+
+  @@unique([tenantId, email])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+  tenantId    String   @db.Uuid @map("tenant_id")
+  name        String   @db.VarChar(64)
+  description String?  @db.Text
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  permissions RolePermission[]
+  userRoles   UserRole[]
+
+  @@unique([tenantId, name])
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid()) @db.Uuid
+  resource    String   @db.VarChar(64) // e.g. 'inventory', 'sales', 'accounting'
+  action      String   @db.VarChar(32) // e.g. 'view', 'create', 'approve', 'post', 'reverse'
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  roles RolePermission[]
+
+  @@unique([resource, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String @db.Uuid @map("role_id")
+  permissionId String @db.Uuid @map("permission_id")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId String @db.Uuid @map("user_id")
+  roleId String @db.Uuid @map("role_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  tenantId   String   @db.Uuid @map("tenant_id")
+  userId     String?  @db.Uuid @map("user_id")
+  action     String   @db.VarChar(64)
+  entity     String   @db.VarChar(64)
+  entityId   String?  @db.VarChar(64) @map("entity_id")
+  oldValues  Json?    @map("old_values")
+  newValues  Json?    @map("new_values")
+  ipAddress  String?  @db.VarChar(45) @map("ip_address")
+  userAgent  String?  @db.Text @map("user_agent")
+  createdAt  DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, entity, entityId])
+  @@map("audit_logs")
+}
+
+// ---------------------------------------------------------
+// 2. PRODUCTS & INVENTORY
+// ---------------------------------------------------------
+
+enum ProductType {
+  STOCKABLE
+  CONSUMABLE
+  SERVICE
+  COMPOSITE
+  RAW_MATERIAL
+  FINISHED_PRODUCT
+}
+
+enum ValuationMethod {
+  WAC
+  FIFO
+}
+
+model ProductCategory {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid @map("tenant_id")
+  parentId  String?  @db.Uuid @map("parent_id")
+  nameAr    String   @db.VarChar(255) @map("name_ar")
+  nameFr    String   @db.VarChar(255) @map("name_fr")
+  slug      String   @db.VarChar(255)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant   Tenant            @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  parent   ProductCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children ProductCategory[] @relation("CategoryHierarchy")
+  products Product[]
+
+  @@map("product_categories")
+}
+
+model UnitOfMeasure {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid @map("tenant_id")
+  code      String   @db.VarChar(16)
+  nameAr    String   @db.VarChar(64) @map("name_ar")
+  nameFr    String   @db.VarChar(64) @map("name_fr")
+  isSystem  Boolean  @default(false) @map("is_system")
+  createdAt DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  products Product[]
+
+  @@unique([tenantId, code])
+  @@map("units_of_measure")
+}
+
+model Product {
+  id              String          @id @default(uuid()) @db.Uuid
+  tenantId        String          @db.Uuid @map("tenant_id")
+  categoryId      String?         @db.Uuid @map("category_id")
+  uomId           String          @db.Uuid @map("uom_id")
+  sku             String          @db.VarChar(64)
+  barcode         String?         @db.VarChar(64)
+  nameAr          String          @db.VarChar(255) @map("name_ar")
+  nameFr          String          @db.VarChar(255) @map("name_fr")
+  descriptionAr   String?         @db.Text @map("description_ar")
+  descriptionFr   String?         @db.Text @map("description_fr")
+  productType     ProductType     @default(STOCKABLE) @map("product_type")
+  valuationMethod ValuationMethod @default(WAC) @map("valuation_method")
+  
+  // Financial & Precision Attributes
+  purchasePrice   Decimal         @default(0.0000) @db.Decimal(18, 4) @map("purchase_price")
+  sellingPrice    Decimal         @default(0.0000) @db.Decimal(18, 4) @map("selling_price")
+  defaultTaxRate  Decimal         @default(0.2000) @db.Decimal(6, 4) @map("default_tax_rate") // 20% Moroccan TVA
+  
+  reorderPoint    Decimal         @default(0.0000) @db.Decimal(14, 4) @map("reorder_point")
+  maximumStock    Decimal?        @db.Decimal(14, 4) @map("maximum_stock")
+  trackLots       Boolean         @default(false) @map("track_lots")
+  trackSerials    Boolean         @default(false) @map("track_serials")
+  trackExpiration Boolean         @default(false) @map("track_expiration")
+  isActive        Boolean         @default(true) @map("is_active")
+  createdAt       DateTime        @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt       DateTime        @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  category      ProductCategory?    @relation(fields: [categoryId], references: [id])
+  uom           UnitOfMeasure       @relation(fields: [uomId], references: [id], onDelete: Restrict)
+  stockBalances StockBalance[]
+  movementLines StockMovementLine[]
+  invoiceLines  SalesInvoiceLine[]
+
+  @@unique([tenantId, sku])
+  @@index([tenantId, barcode])
+  @@map("products")
+}
+
+model Warehouse {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid @map("tenant_id")
+  branchId  String   @db.Uuid @map("branch_id")
+  code      String   @db.VarChar(32)
+  name      String   @db.VarChar(255)
+  address   String?  @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt DateTime @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant          Tenant          @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  branch          Branch          @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  stockBalances   StockBalance[]
+  sourceMovements StockMovement[] @relation("SourceWarehouse")
+  destMovements   StockMovement[] @relation("DestWarehouse")
+
+  @@unique([tenantId, code])
+  @@map("warehouses")
+}
+
+model StockBalance {
+  id                String   @id @default(uuid()) @db.Uuid
+  tenantId          String   @db.Uuid @map("tenant_id")
+  warehouseId       String   @db.Uuid @map("warehouse_id")
+  productId         String   @db.Uuid @map("product_id")
+  quantityOnHand    Decimal  @default(0.0000) @db.Decimal(14, 4) @map("quantity_on_hand")
+  quantityReserved  Decimal  @default(0.0000) @db.Decimal(14, 4) @map("quantity_reserved")
+  currentWac        Decimal  @default(0.0000) @db.Decimal(18, 4) @map("current_wac") // Weighted Average Cost
+  updatedAt         DateTime @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Restrict)
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, warehouseId, productId])
+  @@map("stock_balances")
+}
+
+enum StockMovementType {
+  PURCHASE_RECEIPT
+  SALES_ISSUE
+  SALES_RETURN
+  PURCHASE_RETURN
+  INTERNAL_TRANSFER
+  INVENTORY_ADJUSTMENT
+  STOCK_COUNT
+  PRODUCTION_CONSUMPTION
+  PRODUCTION_OUTPUT
+  SCRAP
+  RESERVATION
+  RELEASE_RESERVATION
+  OPENING_BALANCE
+}
+
+enum StockMovementStatus {
+  COMPLETED
+  REVERSED
+}
+
+// APPEND-ONLY IMMUTABLE STOCK MOVEMENT LEDGER
+model StockMovement {
+  id                    String              @id @default(uuid()) @db.Uuid
+  tenantId              String              @db.Uuid @map("tenant_id")
+  movementNumber        String              @db.VarChar(64) @map("movement_number")
+  movementType          StockMovementType   @map("movement_type")
+  sourceWarehouseId     String?             @db.Uuid @map("source_warehouse_id")
+  destWarehouseId       String?             @db.Uuid @map("destination_warehouse_id")
+  referenceDocumentType String?             @db.VarChar(64) @map("reference_document_type")
+  referenceDocumentId   String?             @db.Uuid @map("reference_document_id")
+  status                StockMovementStatus @default(COMPLETED)
+  reversedMovementId    String?             @db.Uuid @map("reversed_movement_id")
+  notes                 String?             @db.Text
+  createdBy             String              @db.Uuid @map("created_by")
+  createdAt             DateTime            @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  sourceWarehouse Warehouse?          @relation("SourceWarehouse", fields: [sourceWarehouseId], references: [id])
+  destWarehouse   Warehouse?          @relation("DestWarehouse", fields: [destWarehouseId], references: [id])
+  lines           StockMovementLine[]
+
+  @@unique([tenantId, movementNumber])
+  @@map("stock_movements")
+}
+
+model StockMovementLine {
+  id             String    @id @default(uuid()) @db.Uuid
+  tenantId       String    @db.Uuid @map("tenant_id")
+  movementId     String    @db.Uuid @map("movement_id")
+  productId      String    @db.Uuid @map("product_id")
+  quantity       Decimal   @db.Decimal(14, 4)
+  unitCost       Decimal   @db.Decimal(18, 4) @map("unit_cost")
+  totalCost      Decimal   @db.Decimal(18, 4) @map("total_cost")
+  batchNumber    String?   @db.VarChar(64) @map("batch_number")
+  serialNumber   String?   @db.VarChar(64) @map("serial_number")
+  expirationDate DateTime? @db.Date @map("expiration_date")
+  createdAt      DateTime  @default(now()) @db.Timestamptz @map("created_at")
+
+  movement StockMovement @relation(fields: [movementId], references: [id], onDelete: Restrict)
+  product  Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, productId, createdAt])
+  @@map("stock_movement_lines")
+}
+
+// ---------------------------------------------------------
+// 3. ACCOUNTING & GENERAL LEDGER (PCGE MOROCCO)
+// ---------------------------------------------------------
+
+model Account {
+  id             String   @id @default(uuid()) @db.Uuid
+  tenantId       String   @db.Uuid @map("tenant_id")
+  accountNumber  String   @db.VarChar(16) @map("account_number") // e.g. 3421, 4411, 5141
+  accountClass   Int      @db.SmallInt @map("account_class") // 1 to 8 PCGE
+  nameAr         String   @db.VarChar(255) @map("name_ar")
+  nameFr         String   @db.VarChar(255) @map("name_fr")
+  parentAccountId String? @db.Uuid @map("parent_account_id")
+  isReconcilable Boolean  @default(false) @map("is_reconcilable")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant        Tenant             @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  parentAccount Account?           @relation("AccountHierarchy", fields: [parentAccountId], references: [id])
+  childAccounts Account[]          @relation("AccountHierarchy")
+  entryLines    JournalEntryLine[]
+
+  @@unique([tenantId, accountNumber])
+  @@map("accounts")
+}
+
+enum JournalType {
+  SALES
+  PURCHASE
+  BANK
+  CASH
+  GENERAL
+}
+
+model Journal {
+  id               String      @id @default(uuid()) @db.Uuid
+  tenantId         String      @db.Uuid @map("tenant_id")
+  code             String      @db.VarChar(16) // VE, AC, BQ, CA, OD
+  nameAr           String      @db.VarChar(128) @map("name_ar")
+  nameFr           String      @db.VarChar(128) @map("name_fr")
+  journalType      JournalType @map("journal_type")
+  defaultAccountId String?     @db.Uuid @map("default_account_id")
+  createdAt        DateTime    @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant  Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  entries JournalEntry[]
+
+  @@unique([tenantId, code])
+  @@map("journals")
+}
+
+enum JournalEntryStatus {
+  DRAFT
+  POSTED
+  REVERSED
+}
+
+model JournalEntry {
+  id                  String             @id @default(uuid()) @db.Uuid
+  tenantId            String             @db.Uuid @map("tenant_id")
+  journalId           String             @db.Uuid @map("journal_id")
+  entryNumber         String             @db.VarChar(64) @map("entry_number")
+  accountingDate      DateTime           @db.Date @map("accounting_date")
+  sourceDocumentType  String?            @db.VarChar(64) @map("source_document_type")
+  sourceDocumentId    String?            @db.Uuid @map("source_document_id")
+  description         String             @db.Text
+  status              JournalEntryStatus @default(DRAFT)
+  postedAt            DateTime?          @db.Timestamptz @map("posted_at")
+  postedBy            String?            @db.Uuid @map("posted_by")
+  reversedEntryId     String?            @db.Uuid @map("reversed_entry_id")
+  createdAt           DateTime           @default(now()) @db.Timestamptz @map("created_at")
+
+  tenant  Tenant             @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  journal Journal            @relation(fields: [journalId], references: [id], onDelete: Restrict)
+  lines   JournalEntryLine[]
+
+  @@unique([tenantId, entryNumber])
+  @@map("journal_entries")
+}
+
+model JournalEntryLine {
+  id             String   @id @default(uuid()) @db.Uuid
+  tenantId       String   @db.Uuid @map("tenant_id")
+  journalEntryId String   @db.Uuid @map("journal_entry_id")
+  accountId      String   @db.Uuid @map("account_id")
+  debit          Decimal  @default(0.0000) @db.Decimal(18, 4)
+  credit         Decimal  @default(0.0000) @db.Decimal(18, 4)
+  description    String?  @db.VarChar(255)
+  partnerType    String?  @db.VarChar(32) @map("partner_type")
+  partnerId      String?  @db.Uuid @map("partner_id")
+  createdAt      DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  entry   JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Restrict)
+  account Account      @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  @@index([tenantId, accountId])
+  @@map("journal_entry_lines")
+}
+
+// ---------------------------------------------------------
+// 4. COMMERCIAL (CUSTOMERS & SALES INVOICING)
+// ---------------------------------------------------------
+
+enum CustomerType {
+  COMPANY
+  INDIVIDUAL
+}
+
+model Customer {
+  id                String       @id @default(uuid()) @db.Uuid
+  tenantId          String       @db.Uuid @map("tenant_id")
+  customerType      CustomerType @default(COMPANY) @map("customer_type")
+  legalName         String       @db.VarChar(255) @map("legal_name")
+  commercialName    String?      @db.VarChar(255) @map("commercial_name")
+  ice               String?      @db.VarChar(15) // Required for Moroccan B2B
+  identifiantFiscal String?      @db.VarChar(15) @map("identifiant_fiscal")
+  registreCommerce  String?      @db.VarChar(32) @map("registre_commerce")
+  patente           String?      @db.VarChar(32)
+  email             String?      @db.VarChar(255)
+  phone             String?      @db.VarChar(32)
+  address           String?      @db.Text
+  city              String?      @db.VarChar(100)
+  creditLimit       Decimal      @default(0.0000) @db.Decimal(18, 4) @map("credit_limit")
+  currentBalance    Decimal      @default(0.0000) @db.Decimal(18, 4) @map("current_balance")
+  isActive          Boolean      @default(true) @map("is_active")
+  createdAt         DateTime     @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt         DateTime     @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  invoices SalesInvoice[]
+
+  @@map("customers")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  APPROVED
+  POSTED
+  PARTIALLY_PAID
+  PAID
+  CANCELLED
+}
+
+model SalesInvoice {
+  id             String        @id @default(uuid()) @db.Uuid
+  tenantId       String        @db.Uuid @map("tenant_id")
+  branchId       String        @db.Uuid @map("branch_id")
+  customerId     String        @db.Uuid @map("customer_id")
+  invoiceNumber  String        @db.VarChar(64) @map("invoice_number")
+  fiscalYear     Int           @db.SmallInt @map("fiscal_year")
+  issueDate      DateTime      @db.Date @map("issue_date")
+  dueDate        DateTime      @db.Date @map("due_date")
+  currency       String        @default("MAD") @db.VarChar(3)
+  exchangeRate   Decimal       @default(1.000000) @db.Decimal(10, 6) @map("exchange_rate")
+  
+  subtotalAmount Decimal       @db.Decimal(18, 4) @map("subtotal_amount")
+  discountAmount Decimal       @default(0.0000) @db.Decimal(18, 4) @map("discount_amount")
+  taxAmount      Decimal       @db.Decimal(18, 4) @map("tax_amount")
+  totalAmount    Decimal       @db.Decimal(18, 4) @map("total_amount")
+  paidAmount     Decimal       @default(0.0000) @db.Decimal(18, 4) @map("paid_amount")
+  
+  status         InvoiceStatus @default(DRAFT)
+  notes          String?       @db.Text
+  createdBy      String        @db.Uuid @map("created_by")
+  createdAt      DateTime      @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt      DateTime      @updatedAt @db.Timestamptz @map("updated_at")
+
+  tenant   Tenant             @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  branch   Branch             @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  customer Customer           @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  lines    SalesInvoiceLine[]
+
+  @@unique([tenantId, invoiceNumber])
+  @@map("sales_invoices")
+}
+
+model SalesInvoiceLine {
+  id                 String   @id @default(uuid()) @db.Uuid
+  tenantId           String   @db.Uuid @map("tenant_id")
+  invoiceId          String   @db.Uuid @map("invoice_id")
+  productId          String   @db.Uuid @map("product_id")
+  description        String   @db.Text
+  quantity           Decimal  @db.Decimal(14, 4)
+  unitPrice          Decimal  @db.Decimal(18, 4) @map("unit_price")
+  discountPercentage Decimal  @default(0.00) @db.Decimal(5, 2) @map("discount_percentage")
+  taxRate            Decimal  @db.Decimal(6, 4) @map("tax_rate") // e.g. 0.2000 for 20%
+  subtotal           Decimal  @db.Decimal(18, 4)
+  taxAmount          Decimal  @db.Decimal(18, 4) @map("tax_amount")
+  total              Decimal  @db.Decimal(18, 4)
+  createdAt          DateTime @default(now()) @db.Timestamptz @map("created_at")
+
+  invoice SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  product Product      @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@map("sales_invoice_lines")
+}

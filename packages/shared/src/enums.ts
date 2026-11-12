@@ -1,0 +1,109 @@
+/**
+ * Domain Enums for Morocco Business OS
+ */
+
+export enum TenantPlanTier {
+  STARTER = 'STARTER',
+  BUSINESS = 'BUSINESS',
+  PROFESSIONAL = 'PROFESSIONAL',
+  ENTERPRISE = 'ENTERPRISE',
+}
+
+export enum TenantStatus {
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum UserRole {
+  OWNER = 'OWNER',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  CEO = 'CEO',
+  FINANCE_MANAGER = 'FINANCE_MANAGER',
+  ACCOUNTANT = 'ACCOUNTANT',
+  INVENTORY_MANAGER = 'INVENTORY_MANAGER',
+  WAREHOUSE_MANAGER = 'WAREHOUSE_MANAGER',
+  PROCUREMENT_MANAGER = 'PROCUREMENT_MANAGER',
+  SALES_MANAGER = 'SALES_MANAGER',
+  SALES_AGENT = 'SALES_AGENT',
+  HR_MANAGER = 'HR_MANAGER',
+  AUDITOR = 'AUDITOR',
+  READ_ONLY = 'READ_ONLY',
+}
+
+export enum ProductType {
+  STOCKABLE = 'STOCKABLE',
+  CONSUMABLE = 'CONSUMABLE',
+  SERVICE = 'SERVICE',
+  COMPOSITE = 'COMPOSITE',
+  RAW_MATERIAL = 'RAW_MATERIAL',
+  FINISHED_PRODUCT = 'FINISHED_PRODUCT',
+}
+
+export enum InventoryValuationMethod {
+  WAC = 'WAC',   // Weighted Average Cost (Prix Moyen Pondéré - PUMP)
+  FIFO = 'FIFO', // First-In, First-Out
+}
+
+export enum StockMovementType {
+  PURCHASE_RECEIPT = 'PURCHASE_RECEIPT',
+  SALES_ISSUE = 'SALES_ISSUE',
+  SALES_RETURN = 'SALES_RETURN',
+  PURCHASE_RETURN = 'PURCHASE_RETURN',
+  INTERNAL_TRANSFER = 'INTERNAL_TRANSFER',
+  INVENTORY_ADJUSTMENT = 'INVENTORY_ADJUSTMENT',
+  STOCK_COUNT = 'STOCK_COUNT',
+  PRODUCTION_CONSUMPTION = 'PRODUCTION_CONSUMPTION',
+  PRODUCTION_OUTPUT = 'PRODUCTION_OUTPUT',
+  SCRAP = 'SCRAP',
+  RESERVATION = 'RESERVATION',
+  RELEASE_RESERVATION = 'RELEASE_RESERVATION',
+  OPENING_BALANCE = 'OPENING_BALANCE',
+}
+
+export enum StockMovementStatus {
+  COMPLETED = 'COMPLETED',
+  REVERSED = 'REVERSED',
+}
+
+export enum SalesOrderStatus {
+  DRAFT = 'DRAFT',
+  CONFIRMED = 'CONFIRMED',
+  RESERVED = 'RESERVED',
+  PARTIALLY_DELIVERED = 'PARTIALLY_DELIVERED',
+  DELIVERED = 'DELIVERED',
+  INVOICED = 'INVOICED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum InvoiceStatus {
+  DRAFT = 'DRAFT',
+  APPROVED = 'APPROVED',
+  POSTED = 'POSTED',
+  PARTIALLY_PAID = 'PARTIALLY_PAID',
+  PAID = 'PAID',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum JournalType {
+  SALES = 'SALES',       // Ventes (VE)
+  PURCHASE = 'PURCHASE', // Achats (AC)
+  BANK = 'BANK',         // Banque (BQ)
+  CASH = 'CASH',         // Caisse (CA)
+  GENERAL = 'GENERAL',   // Opérations Diverses (OD)
+}
+
+export enum JournalEntryStatus {
+  DRAFT = 'DRAFT',
+  POSTED = 'POSTED',
+  REVERSED = 'REVERSED',
+}
+
+export enum PaymentMethod {
+  CASH = 'CASH',                 // Espèces
+  BANK_TRANSFER = 'BANK_TRANSFER', // Virement bancaire
+  CHEQUE = 'CHEQUE',             // Chèque
+  PROMISSORY_NOTE = 'PROMISSORY_NOTE', // Effet de commerce / Lettre de change
+  CREDIT_CARD = 'CREDIT_CARD',   // Carte bancaire
+}
