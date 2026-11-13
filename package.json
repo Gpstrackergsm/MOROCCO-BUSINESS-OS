@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "npm run build --workspace=@morocco-os/shared --if-present && npm run db:generate --workspace=@morocco-os/database --if-present",
     "build": "npm run build --workspaces --if-present",
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:web": "npm run dev --workspace=apps/web",

@@ -22,7 +22,7 @@ import {
   Edit2,
   Languages
 } from 'lucide-react';
-import { calculateWAC } from '@morocco-os/shared';
+import { calculateWAC } from '../lib/validators';
 
 export interface CompanyProfile {
   name: string;
