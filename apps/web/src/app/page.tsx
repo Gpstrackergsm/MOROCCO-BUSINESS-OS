@@ -404,6 +404,62 @@ const DICT = {
   }
 };
 
+function SaunerasLogo({ size = 'lg' }: { size?: 'sm' | 'lg' }) {
+  const dims = size === 'lg' ? 'h-16 w-16 rounded-2xl' : 'h-11 w-11 rounded-xl';
+  const svgDims = size === 'lg' ? 40 : 28;
+  return (
+    <div
+      className={`inline-flex ${dims} bg-gradient-to-br from-[#064E3B] via-[#047857] to-[#D97706] p-[2px] shadow-xl shadow-emerald-900/20 shrink-0`}
+    >
+      <div className="h-full w-full rounded-[inherit] bg-gradient-to-br from-[#064E3B] via-[#065F46] to-[#115E59] flex items-center justify-center relative overflow-hidden">
+        <div className="absolute -top-3 -right-3 h-8 w-8 rounded-full bg-amber-400/25 blur-md" />
+        <div className="absolute -bottom-3 -left-3 h-8 w-8 rounded-full bg-emerald-300/20 blur-md" />
+        <svg
+          width={svgDims}
+          height={svgDims}
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="relative z-10 drop-shadow-sm"
+        >
+          <defs>
+            <linearGradient id="saunerasGold" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#FDE68A" />
+              <stop offset="50%" stopColor="#F59E0B" />
+              <stop offset="100%" stopColor="#EA580C" />
+            </linearGradient>
+            <linearGradient id="saunerasMint" x1="10" y1="8" x2="38" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#A7F3D0" />
+              <stop offset="100%" stopColor="#34D399" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M24 4L40 13.2V34.8L24 44L8 34.8V13.2L24 4Z"
+            stroke="url(#saunerasGold)"
+            strokeWidth="2.2"
+            strokeLinejoin="round"
+            fill="rgba(255,255,255,0.03)"
+          />
+          <path
+            d="M29.5 15.5C29.5 15.5 26.5 13 22.5 13C18.5 13 16 15.2 16 18C16 23.5 32 21.5 32 28.5C32 32.2 28.5 35 23.5 35C19 35 16 32.2 16 32.2"
+            stroke="url(#saunerasGold)"
+            strokeWidth="3.6"
+            strokeLinecap="round"
+          />
+          <path
+            d="M24 9.5L34.5 15.5V32.5L24 38.5L13.5 32.5V15.5L24 9.5Z"
+            stroke="url(#saunerasMint)"
+            strokeWidth="1.2"
+            strokeOpacity="0.55"
+            strokeDasharray="3 2"
+          />
+          <circle cx="24" cy="9" r="2" fill="#FDE68A" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function AuthenticPlatform() {
   const [lang, setLang] = useState<Language>('fr');
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
@@ -929,11 +985,15 @@ export default function AuthenticPlatform() {
   if (!currentUser) {
     return (
       <div
-        className={`min-h-screen bg-slate-900 text-slate-100 flex flex-col justify-center items-center p-4 selection:bg-blue-600 w-full max-w-full overflow-x-hidden relative ${
+        className={`min-h-screen bg-gradient-to-br from-[#FAF6F0] via-[#F4EDE2] to-[#E8F1EC] text-stone-800 flex flex-col justify-center items-center p-4 selection:bg-emerald-600 selection:text-white w-full max-w-full overflow-x-hidden relative ${
           isRtl ? 'font-arabic' : 'font-sans'
         }`}
         dir={isRtl ? 'rtl' : 'ltr'}
       >
+        {/* Decorative Warm & Emerald Ambient Glows */}
+        <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-amber-400/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-emerald-600/15 blur-3xl" />
+
         {notification && (
           <div
             className={`fixed top-4 end-4 z-50 px-4 py-3 rounded-xl shadow-xl border flex items-center gap-3 text-xs font-bold ${
@@ -948,13 +1008,15 @@ export default function AuthenticPlatform() {
         )}
 
         {/* Clean Language Selector */}
-        <div className="absolute top-4 end-4 flex items-center bg-slate-800/90 border border-slate-700 p-1 rounded-xl shadow-lg backdrop-blur-sm z-40">
-          <Languages className="h-4 w-4 text-slate-400 ms-2 me-1" />
+        <div className="absolute top-4 end-4 flex items-center bg-white/90 border border-stone-200/90 p-1 rounded-xl shadow-md backdrop-blur-sm z-40">
+          <Languages className="h-4 w-4 text-amber-600 ms-2 me-1" />
           <button
             type="button"
             onClick={() => changeLanguage('fr')}
             className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
-              lang === 'fr' ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'
+              lang === 'fr'
+                ? 'bg-gradient-to-r from-emerald-700 to-teal-600 text-white shadow'
+                : 'text-stone-500 hover:text-stone-900'
             }`}
           >
             Français
@@ -963,30 +1025,34 @@ export default function AuthenticPlatform() {
             type="button"
             onClick={() => changeLanguage('ar')}
             className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
-              lang === 'ar' ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'
+              lang === 'ar'
+                ? 'bg-gradient-to-r from-emerald-700 to-teal-600 text-white shadow'
+                : 'text-stone-500 hover:text-stone-900'
             }`}
           >
             العربية
           </button>
         </div>
 
-        <div className="max-w-md w-full space-y-6 pt-12 sm:pt-0 my-auto">
-          <div className="text-center space-y-2">
-            <div className="inline-flex h-14 w-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 items-center justify-center text-white font-black text-2xl shadow-xl shadow-blue-500/20">
-              SA
-            </div>
-            <h1 className="text-2xl font-black tracking-tight text-white">{t.appTitle}</h1>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">{t.appSubtitle}</p>
+        <div className="max-w-md w-full space-y-6 pt-12 sm:pt-0 my-auto relative z-10">
+          <div className="text-center space-y-2.5">
+            <SaunerasLogo size="lg" />
+            <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-emerald-900 via-teal-800 to-amber-700 bg-clip-text text-transparent">
+              {t.appTitle}
+            </h1>
+            <p className="text-xs text-stone-600 font-medium max-w-sm mx-auto">{t.appSubtitle}</p>
           </div>
 
-          <div className="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
+          <div className="bg-white/95 border border-stone-200/90 rounded-3xl p-6 sm:p-8 shadow-[0_24px_60px_-15px_rgba(28,25,23,0.10)] backdrop-blur-md">
             {/* Clean Tabs without repeated translations */}
-            <div className="grid grid-cols-2 p-1 bg-slate-900/80 rounded-xl mb-6 border border-slate-700 text-xs font-bold">
+            <div className="grid grid-cols-2 p-1 bg-[#F5F0E8] rounded-xl mb-6 border border-stone-200/80 text-xs font-bold">
               <button
                 type="button"
                 onClick={() => setAuthView('LOGIN')}
                 className={`py-2 rounded-lg transition ${
-                  authView === 'LOGIN' ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'
+                  authView === 'LOGIN'
+                    ? 'bg-gradient-to-r from-emerald-700 to-teal-600 text-white shadow-md'
+                    : 'text-stone-500 hover:text-stone-900'
                 }`}
               >
                 {t.loginTab}
@@ -995,7 +1061,9 @@ export default function AuthenticPlatform() {
                 type="button"
                 onClick={() => setAuthView('REGISTER')}
                 className={`py-2 rounded-lg transition ${
-                  authView === 'REGISTER' ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'
+                  authView === 'REGISTER'
+                    ? 'bg-gradient-to-r from-emerald-700 to-teal-600 text-white shadow-md'
+                    : 'text-stone-500 hover:text-stone-900'
                 }`}
               >
                 {t.createAccountTab}
@@ -1006,39 +1074,39 @@ export default function AuthenticPlatform() {
             {authView === 'LOGIN' && (
               <form onSubmit={handleLogin} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1.5">{t.loginEmailLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1.5">{t.loginEmailLabel}</label>
                   <div className="relative">
-                    <Mail className="h-4 w-4 absolute start-3 top-3 text-slate-500" />
+                    <Mail className="h-4 w-4 absolute start-3 top-3 text-amber-600" />
                     <input
                       type="email"
                       required
                       placeholder="nom@entreprise.ma"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 ps-9 pe-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
+                      className="w-full bg-[#FAF8F5] border border-stone-300 rounded-xl py-2.5 ps-9 pe-3 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white font-mono text-base sm:text-xs transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1.5">{t.loginPasswordLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1.5">{t.loginPasswordLabel}</label>
                   <div className="relative">
-                    <Lock className="h-4 w-4 absolute start-3 top-3 text-slate-500" />
+                    <Lock className="h-4 w-4 absolute start-3 top-3 text-amber-600" />
                     <input
                       type="password"
                       required
                       placeholder="••••••••"
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 ps-9 pe-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
+                      className="w-full bg-[#FAF8F5] border border-stone-300 rounded-xl py-2.5 ps-9 pe-3 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white font-mono text-base sm:text-xs transition"
                     />
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-1.5">{t.passwordNotice}</p>
+                  <p className="text-[10px] text-stone-500 mt-1.5">{t.passwordNotice}</p>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl shadow-lg shadow-blue-600/30 transition text-sm flex items-center justify-center gap-2 mt-2"
+                  className="w-full py-3 bg-gradient-to-r from-emerald-700 via-teal-600 to-amber-600 hover:from-emerald-800 hover:via-teal-700 hover:to-amber-700 text-white font-black rounded-xl shadow-lg shadow-emerald-800/20 transition text-sm flex items-center justify-center gap-2 mt-2"
                 >
                   <span>{t.submitLogin}</span>
                   <ArrowRight className={`h-4 w-4 ${isRtl ? 'rotate-180' : ''}`} />
@@ -1050,43 +1118,43 @@ export default function AuthenticPlatform() {
             {authView === 'REGISTER' && (
               <form onSubmit={handleRegister} className="space-y-3.5 text-xs max-h-[70vh] overflow-y-auto pe-1">
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">{t.companyNameLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1">{t.companyNameLabel}</label>
                   <input
                     type="text"
                     required
                     placeholder={t.companyNamePlaceholder}
                     value={regCompanyName}
                     onChange={(e) => setRegCompanyName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 text-base sm:text-xs"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white text-base sm:text-xs transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">{t.adminFullNameLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1">{t.adminFullNameLabel}</label>
                   <input
                     type="text"
                     required
                     placeholder={t.adminFullNamePlaceholder}
                     value={regFullName}
                     onChange={(e) => setRegFullName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 text-base sm:text-xs"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white text-base sm:text-xs transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">{t.emailLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1">{t.emailLabel}</label>
                   <input
                     type="email"
                     required
                     placeholder={t.emailPlaceholder}
                     value={regAdminEmail}
                     onChange={(e) => setRegAdminEmail(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white font-mono text-base sm:text-xs transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">{t.passwordLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1">{t.passwordLabel}</label>
                   <input
                     type="password"
                     required
@@ -1094,48 +1162,48 @@ export default function AuthenticPlatform() {
                     placeholder={t.passwordPlaceholder}
                     value={regAdminPassword}
                     onChange={(e) => setRegAdminPassword(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white font-mono text-base sm:text-xs transition"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">{t.cityLabel}</label>
+                    <label className="block text-stone-700 font-bold mb-1">{t.cityLabel}</label>
                     <input
                       type="text"
                       placeholder={t.cityPlaceholder}
                       value={regCity}
                       onChange={(e) => setRegCity(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 text-base sm:text-xs"
+                      className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white text-base sm:text-xs transition"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 font-bold mb-1">{t.phoneLabel}</label>
+                    <label className="block text-stone-700 font-bold mb-1">{t.phoneLabel}</label>
                     <input
                       type="text"
                       placeholder={t.phonePlaceholder}
                       value={regPhone}
                       onChange={(e) => setRegPhone(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
+                      className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white font-mono text-base sm:text-xs transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-bold mb-1">{t.iceLabel}</label>
+                  <label className="block text-stone-700 font-bold mb-1">{t.iceLabel}</label>
                   <input
                     type="text"
                     maxLength={15}
                     placeholder={t.icePlaceholder}
                     value={regIce}
                     onChange={(e) => setRegIce(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono tracking-widest text-base sm:text-xs"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 text-stone-900 placeholder-stone-400 outline-none focus:border-emerald-600 focus:bg-white font-mono tracking-widest text-base sm:text-xs transition"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-xl shadow-lg shadow-blue-600/30 transition text-sm flex items-center justify-center gap-2 pt-3"
+                  className="w-full py-3 bg-gradient-to-r from-emerald-700 via-teal-600 to-amber-600 hover:from-emerald-800 hover:via-teal-700 hover:to-amber-700 text-white font-black rounded-xl shadow-lg shadow-emerald-800/20 transition text-sm flex items-center justify-center gap-2 pt-3"
                 >
                   <ShieldCheck className="h-4 w-4" />
                   <span>{t.submitRegister}</span>
@@ -1153,7 +1221,7 @@ export default function AuthenticPlatform() {
   // =========================================================================
   return (
     <div
-      className={`min-h-screen bg-slate-50 text-slate-900 pb-20 w-full max-w-full overflow-x-hidden ${isRtl ? 'font-arabic' : 'font-sans'}`}
+      className={`min-h-screen bg-[#FAF8F5] text-stone-900 pb-20 w-full max-w-full overflow-x-hidden ${isRtl ? 'font-arabic' : 'font-sans'}`}
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {notification && (
@@ -1170,22 +1238,20 @@ export default function AuthenticPlatform() {
       )}
 
       {/* Main Top Header */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-30 shadow-sm w-full max-w-full">
+      <header className="border-b border-stone-200/90 bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-sm w-full max-w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-tr from-blue-700 to-cyan-500 flex items-center justify-center text-white font-black text-lg shadow">
-                {currentUser.company.name.slice(0, 2).toUpperCase()}
-              </div>
+              <SaunerasLogo size="sm" />
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-extrabold text-base text-slate-900 truncate max-w-[180px] sm:max-w-none">{currentUser.company.name}</span>
+                  <span className="font-extrabold text-base text-stone-900 truncate max-w-[180px] sm:max-w-none">{currentUser.company.name}</span>
                   <button
                     onClick={() => {
                       setEditedCompanyName(currentUser.company.name);
                       setShowEditCompany(true);
                     }}
-                    className="p-1 text-slate-400 hover:text-blue-600 transition shrink-0"
+                    className="p-1 text-stone-400 hover:text-emerald-700 transition shrink-0"
                     title={t.editCompanyTitle}
                   >
                     <Edit2 className="h-3.5 w-3.5" />
@@ -1195,27 +1261,27 @@ export default function AuthenticPlatform() {
                     <span>{t.activeBadge}</span>
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 flex items-center gap-1 font-medium mt-0.5 flex-wrap">
-                  <MapPin className="h-3 w-3 text-red-500 shrink-0" />
+                <p className="text-[11px] text-stone-500 flex items-center gap-1 font-medium mt-0.5 flex-wrap">
+                  <MapPin className="h-3 w-3 text-amber-600 shrink-0" />
                   <span>{currentUser.company.city ? `${currentUser.company.city} — ` : ''}{t.headquarters}</span>
                   {currentUser.company.ice && (
-                    <span className="text-[10px] text-slate-400 font-mono ms-1">ICE: {currentUser.company.ice}</span>
+                    <span className="text-[10px] text-stone-400 font-mono ms-1">ICE: {currentUser.company.ice}</span>
                   )}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 sm:gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 sm:gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100">
             {/* Language Selector */}
-            <div className="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-xs font-bold">
+            <div className="flex items-center bg-[#F5F0E8] p-0.5 sm:p-1 rounded-xl border border-stone-200 text-xs font-bold">
               <button
                 type="button"
                 onClick={() => changeLanguage('fr')}
                 className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg transition flex items-center gap-1 text-xs ${
                   lang === 'fr'
-                    ? 'bg-white text-blue-700 shadow-sm font-black'
-                    : 'text-slate-500 hover:text-slate-900'
+                    ? 'bg-white text-emerald-800 shadow-sm font-black'
+                    : 'text-stone-500 hover:text-stone-900'
                 }`}
               >
                 <span>Français</span>
@@ -1225,17 +1291,17 @@ export default function AuthenticPlatform() {
                 onClick={() => changeLanguage('ar')}
                 className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg transition flex items-center gap-1 text-xs ${
                   lang === 'ar'
-                    ? 'bg-white text-blue-700 shadow-sm font-black'
-                    : 'text-slate-500 hover:text-slate-900'
+                    ? 'bg-white text-emerald-800 shadow-sm font-black'
+                    : 'text-stone-500 hover:text-stone-900'
                 }`}
               >
                 <span>العربية</span>
               </button>
             </div>
 
-            <div className="hidden lg:flex flex-col text-xs text-end bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-              <span className="font-bold text-slate-800">{currentUser.fullName}</span>
-              <span className="text-slate-500 font-mono text-[11px]">{currentUser.email}</span>
+            <div className="hidden lg:flex flex-col text-xs text-end bg-[#FAF8F5] px-3 py-1.5 rounded-lg border border-stone-200">
+              <span className="font-bold text-stone-800">{currentUser.fullName}</span>
+              <span className="text-stone-500 font-mono text-[11px]">{currentUser.email}</span>
             </div>
 
             <button
@@ -1250,7 +1316,7 @@ export default function AuthenticPlatform() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 rtl:space-x-reverse border-t border-slate-100 overflow-x-auto scrollbar-none py-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 rtl:space-x-reverse border-t border-stone-100 overflow-x-auto scrollbar-none py-1">
           {[
             { id: 'dashboard', label: t.tabDashboard, icon: TrendingUp },
             { id: 'inventory', label: t.tabInventory, icon: Package },
@@ -1265,8 +1331,8 @@ export default function AuthenticPlatform() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 py-3 px-3.5 text-xs font-bold border-b-2 transition whitespace-nowrap ${
                   isActive
-                    ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'border-emerald-700 text-emerald-800 bg-emerald-50/60'
+                    : 'border-transparent text-stone-600 hover:text-stone-900 hover:bg-stone-50'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -1296,32 +1362,32 @@ export default function AuthenticPlatform() {
               </div>
 
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <span className="text-[11px] font-bold text-slate-500 uppercase">{t.kpiStockVal}</span>
+                <span className="text-[11px] font-bold text-stone-500 uppercase">{t.kpiStockVal}</span>
                 <div className="mt-2 flex items-baseline gap-1.5 font-mono">
-                  <span className="text-2xl font-black text-slate-900">{totalStockValuation.toFixed(2)}</span>
-                  <span className="text-xs text-slate-500 font-bold">{t.currency}</span>
+                  <span className="text-2xl font-black text-stone-900">{totalStockValuation.toFixed(2)}</span>
+                  <span className="text-xs text-stone-500 font-bold">{t.currency}</span>
                 </div>
-                <span className="text-[11px] text-blue-600 font-semibold mt-1 block">
+                <span className="text-[11px] text-amber-700 font-semibold mt-1 block">
                   {t.kpiPumpDesc}
                 </span>
               </div>
 
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <span className="text-[11px] font-bold text-slate-500 uppercase">{t.kpiCatalogCount}</span>
+              <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+                <span className="text-[11px] font-bold text-stone-500 uppercase">{t.kpiCatalogCount}</span>
                 <div className="mt-2 flex items-baseline gap-1.5 font-mono">
-                  <span className="text-2xl font-black text-slate-900">{products.length}</span>
-                  <span className="text-xs text-slate-500 font-bold">{lang === 'fr' ? 'articles' : 'صنف'}</span>
+                  <span className="text-2xl font-black text-stone-900">{products.length}</span>
+                  <span className="text-xs text-stone-500 font-bold">{lang === 'fr' ? 'articles' : 'صنف'}</span>
                 </div>
-                <span className="text-[11px] text-slate-400 font-semibold mt-1 block">
+                <span className="text-[11px] text-stone-400 font-semibold mt-1 block">
                   {t.kpiInWarehouse}
                 </span>
               </div>
 
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <span className="text-[11px] font-bold text-slate-500 uppercase">{t.kpiAccountingEntries}</span>
+              <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+                <span className="text-[11px] font-bold text-stone-500 uppercase">{t.kpiAccountingEntries}</span>
                 <div className="mt-2 flex items-baseline gap-1.5 font-mono">
                   <span className="text-2xl font-black text-emerald-600">{journalEntries.length}</span>
-                  <span className="text-xs text-slate-500 font-bold">{lang === 'fr' ? 'lignes' : 'سطر قيد'}</span>
+                  <span className="text-xs text-stone-500 font-bold">{lang === 'fr' ? 'lignes' : 'سطر قيد'}</span>
                 </div>
                 <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">
                   {t.kpiPcgeBalanced}
@@ -1331,22 +1397,22 @@ export default function AuthenticPlatform() {
 
             {/* Clean Initial State */}
             {products.length === 0 && invoices.length === 0 ? (
-              <div className="bg-white rounded-2xl border-2 border-dashed border-slate-300 p-8 text-center space-y-4 shadow-sm">
-                <div className="h-16 w-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
+              <div className="bg-white rounded-2xl border-2 border-dashed border-stone-300 p-8 text-center space-y-4 shadow-sm">
+                <div className="h-16 w-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto border border-amber-200/60">
                   <Boxes className="h-8 w-8" />
                 </div>
                 <div className="max-w-md mx-auto space-y-1">
-                  <h3 className="font-extrabold text-base text-slate-900">
+                  <h3 className="font-extrabold text-base text-stone-900">
                     {t.welcomeTitle} "{currentUser.company.name}"
                   </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <p className="text-xs text-stone-500 leading-relaxed">
                     {t.welcomeDesc}
                   </p>
                 </div>
                 <div className="flex justify-center gap-3 pt-2">
                   <button
                     onClick={() => { setActiveTab('inventory'); setShowAddProduct(true); }}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition"
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white text-xs font-bold rounded-xl shadow-md transition"
                   >
                     <Plus className="h-4 w-4" />
                     <span>{t.addFirstProductBtn}</span>
@@ -1354,11 +1420,11 @@ export default function AuthenticPlatform() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-2">
-                <h3 className="font-extrabold text-sm text-slate-800">
+              <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-sm space-y-2">
+                <h3 className="font-extrabold text-sm text-stone-800">
                   {lang === 'fr' ? `Activité de l'entreprise ${currentUser.company.name}` : `نشاط شركة ${currentUser.company.name}`}
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-stone-500">
                   {lang === 'fr'
                     ? `${products.length} article(s) enregistré(s) en stock, et ${invoices.length} facture(s) de vente validée(s) et reportée(s) au journal comptable.`
                     : `تم تسجيل ${products.length} صنف في المخزون، و${invoices.length} فواتير بيع معتمدة ومرحلة إلى دفتر اليومية المحاسبي.`}
@@ -1371,22 +1437,22 @@ export default function AuthenticPlatform() {
         {/* TAB 2: INVENTORY & PRODUCTS */}
         {activeTab === 'inventory' && (
           <div className="space-y-4">
-            <div className="flex flex-wrap justify-between items-center gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex flex-wrap justify-between items-center gap-3 bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
               <div className="flex items-center gap-2 flex-1 max-w-md">
-                <Search className="h-4 w-4 text-slate-400" />
+                <Search className="h-4 w-4 text-stone-400" />
                 <input
                   type="text"
                   placeholder={t.searchProduct}
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
-                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-blue-500"
+                  className="w-full text-xs bg-[#FAF8F5] border border-stone-200 rounded-lg px-3 py-2 outline-none focus:border-emerald-600"
                 />
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowAddProduct(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm transition"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white text-xs font-bold rounded-lg shadow-sm transition"
                 >
                   <Plus className="h-4 w-4" />
                   <span>{t.addProductBtn}</span>
@@ -1394,7 +1460,7 @@ export default function AuthenticPlatform() {
                 {products.length > 0 && (
                   <button
                     onClick={() => { setSelectedMovementProd(products[0]?.id || ''); setShowStockMovement(true); }}
-                    className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg border border-slate-300 transition"
+                    className="flex items-center gap-1.5 px-3 py-2 bg-[#F5F0E8] hover:bg-stone-200 text-stone-700 text-xs font-bold rounded-lg border border-stone-300 transition"
                   >
                     <Boxes className="h-4 w-4 text-emerald-600" />
                     <span>{t.stockMovementBtn}</span>
@@ -1404,15 +1470,15 @@ export default function AuthenticPlatform() {
             </div>
 
             {products.length === 0 ? (
-              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3">
-                <Package className="h-10 w-10 text-slate-300 mx-auto" />
-                <h4 className="font-bold text-sm text-slate-800">{t.noProductsYet}</h4>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              <div className="bg-white rounded-xl border border-stone-200 p-12 text-center space-y-3">
+                <Package className="h-10 w-10 text-stone-300 mx-auto" />
+                <h4 className="font-bold text-sm text-stone-800">{t.noProductsYet}</h4>
+                <p className="text-xs text-stone-500 max-w-sm mx-auto">
                   {t.noProductsDesc}
                 </p>
                 <button
                   onClick={() => setShowAddProduct(true)}
-                  className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg shadow"
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 text-white text-xs font-bold rounded-lg shadow"
                 >
                   {t.addProductBtn}
                 </button>
@@ -1445,7 +1511,7 @@ export default function AuthenticPlatform() {
                             <td className="py-3 px-3 text-end font-bold text-amber-600">{p.reserved}</td>
                             <td className="py-3 px-3 text-end font-black text-emerald-700">{p.onHand - p.reserved}</td>
                             <td className="py-3 px-3 text-end text-slate-700 font-semibold">{p.wac.toFixed(2)} {t.currency}</td>
-                            <td className="py-3 px-4 text-end text-blue-700 font-extrabold">{p.sellingPrice.toFixed(2)} {t.currency}</td>
+                            <td className="py-3 px-4 text-end text-emerald-800 font-extrabold">{p.sellingPrice.toFixed(2)} {t.currency}</td>
                           </tr>
                         ))}
                     </tbody>
@@ -1459,18 +1525,18 @@ export default function AuthenticPlatform() {
         {/* TAB 3: SALES & INVOICES */}
         {activeTab === 'sales' && (
           <div className="space-y-4">
-            <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
               <div>
-                <h3 className="text-sm font-extrabold text-slate-900">
+                <h3 className="text-sm font-extrabold text-stone-900">
                   {t.salesTitle} {currentUser.company.name}
                 </h3>
-                <p className="text-[11px] text-slate-500">{t.salesSubtitle}</p>
+                <p className="text-[11px] text-stone-500">{t.salesSubtitle}</p>
               </div>
 
               {products.length > 0 && (
                 <button
                   onClick={() => { setInvSelectedProduct(products[0]?.id || ''); setShowNewInvoice(true); }}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm transition"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white text-xs font-bold rounded-lg shadow-sm transition"
                 >
                   <Plus className="h-4 w-4" />
                   <span>{t.newInvoiceBtn}</span>
@@ -1479,10 +1545,10 @@ export default function AuthenticPlatform() {
             </div>
 
             {invoices.length === 0 ? (
-              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3">
-                <Receipt className="h-10 w-10 text-slate-300 mx-auto" />
-                <h4 className="font-bold text-sm text-slate-800">{t.noInvoicesYet}</h4>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              <div className="bg-white rounded-xl border border-stone-200 p-12 text-center space-y-3">
+                <Receipt className="h-10 w-10 text-stone-300 mx-auto" />
+                <h4 className="font-bold text-sm text-stone-800">{t.noInvoicesYet}</h4>
+                <p className="text-xs text-stone-500 max-w-sm mx-auto">
                   {products.length === 0
                     ? (lang === 'fr' ? 'Veuillez d\'abord ajouter des articles au catalogue avant de facturer.' : 'يرجى أولاً إضافة أصناف إلى الكتالوج لتتمكن من إنشاء فواتير البيع.')
                     : t.noInvoicesDesc}
@@ -1490,17 +1556,17 @@ export default function AuthenticPlatform() {
                 {products.length > 0 && (
                   <button
                     onClick={() => { setInvSelectedProduct(products[0]?.id || ''); setShowNewInvoice(true); }}
-                    className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg shadow"
+                    className="px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 text-white text-xs font-bold rounded-lg shadow"
                   >
                     {t.newInvoiceBtn}
                   </button>
                 )}
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto w-full">
                   <table className="w-full min-w-[700px] text-xs text-start">
-                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                    <thead className="bg-[#FAF8F5] border-b border-stone-200 text-stone-700 font-bold">
                       <tr>
                         <th className="py-3 px-4 text-start">{t.invTableNumber}</th>
                         <th className="py-3 px-4 text-start">{t.invTableCustomer}</th>
@@ -1512,20 +1578,20 @@ export default function AuthenticPlatform() {
                         <th className="py-3 px-4 text-center">{t.invTableActions}</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-mono">
+                    <tbody className="divide-y divide-stone-100 font-mono">
                       {invoices.map((inv) => (
-                        <tr key={inv.id} className="hover:bg-slate-50 transition">
-                          <td className="py-3.5 px-4 font-black text-blue-700">{inv.invoiceNumber}</td>
-                          <td className="py-3.5 px-4 font-sans font-bold text-slate-900">{inv.customerName}</td>
-                          <td className="py-3.5 px-3 text-slate-500 text-[11px]">{inv.customerIce}</td>
-                          <td className="py-3.5 px-3 text-slate-600">{inv.date}</td>
-                          <td className="py-3.5 px-3 text-end text-slate-800 font-semibold">{inv.subtotalHt.toFixed(2)} {t.currency}</td>
-                          <td className="py-3.5 px-3 text-end text-slate-600">{inv.tvaAmount.toFixed(2)} {t.currency}</td>
+                        <tr key={inv.id} className="hover:bg-stone-50 transition">
+                          <td className="py-3.5 px-4 font-black text-emerald-800">{inv.invoiceNumber}</td>
+                          <td className="py-3.5 px-4 font-sans font-bold text-stone-900">{inv.customerName}</td>
+                          <td className="py-3.5 px-3 text-stone-500 text-[11px]">{inv.customerIce}</td>
+                          <td className="py-3.5 px-3 text-stone-600">{inv.date}</td>
+                          <td className="py-3.5 px-3 text-end text-stone-800 font-semibold">{inv.subtotalHt.toFixed(2)} {t.currency}</td>
+                          <td className="py-3.5 px-3 text-end text-stone-600">{inv.tvaAmount.toFixed(2)} {t.currency}</td>
                           <td className="py-3.5 px-3 text-end text-emerald-700 font-black">{inv.totalTtc.toFixed(2)} {t.currency}</td>
                           <td className="py-3.5 px-4 text-center">
                             <button
                               onClick={() => setPreviewInvoice(inv)}
-                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded flex items-center gap-1 mx-auto transition"
+                              className="px-2.5 py-1 bg-[#F5F0E8] hover:bg-stone-200 text-stone-700 text-[11px] font-bold rounded flex items-center gap-1 mx-auto transition"
                             >
                               <Printer className="h-3 w-3" />
                               <span>{t.printInvoice}</span>
@@ -1544,10 +1610,10 @@ export default function AuthenticPlatform() {
         {/* TAB 4: PCGE ACCOUNTING */}
         {activeTab === 'accounting' && (
           <div className="space-y-4">
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap justify-between items-center gap-2">
+            <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-sm flex flex-wrap justify-between items-center gap-2">
               <div>
-                <h3 className="text-sm font-extrabold text-slate-900">{t.accountingTitle}</h3>
-                <p className="text-[11px] text-slate-500">{t.accountingSubtitle}</p>
+                <h3 className="text-sm font-extrabold text-stone-900">{t.accountingTitle}</h3>
+                <p className="text-[11px] text-stone-500">{t.accountingSubtitle}</p>
               </div>
               <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-bold">
                 {t.balancedBadge}
@@ -1555,18 +1621,18 @@ export default function AuthenticPlatform() {
             </div>
 
             {journalEntries.length === 0 ? (
-              <div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3">
-                <BookOpen className="h-10 w-10 text-slate-300 mx-auto" />
-                <h4 className="font-bold text-sm text-slate-800">{t.journalEmpty}</h4>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+              <div className="bg-white rounded-xl border border-stone-200 p-12 text-center space-y-3">
+                <BookOpen className="h-10 w-10 text-stone-300 mx-auto" />
+                <h4 className="font-bold text-sm text-stone-800">{t.journalEmpty}</h4>
+                <p className="text-xs text-stone-500 max-w-sm mx-auto">
                   {t.journalEmptyDesc}
                 </p>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto w-full">
                   <table className="w-full min-w-[700px] text-xs text-start">
-                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                    <thead className="bg-[#FAF8F5] border-b border-stone-200 text-stone-700 font-bold">
                       <tr>
                         <th className="py-3 px-4 text-start">{t.journalEntryNum}</th>
                         <th className="py-3 px-3 text-start">{t.journalDate}</th>
@@ -1577,18 +1643,18 @@ export default function AuthenticPlatform() {
                         <th className="py-3 px-4 text-end">{t.journalCredit}</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-mono">
+                    <tbody className="divide-y divide-stone-100 font-mono">
                       {journalEntries.map((j) => (
-                        <tr key={j.id} className="hover:bg-slate-50 transition">
-                          <td className="py-2.5 px-4 font-bold text-slate-800">{j.number}</td>
-                          <td className="py-2.5 px-3 text-slate-500">{j.date}</td>
-                          <td className="py-2.5 px-3 text-blue-700 font-semibold">{j.journal}</td>
-                          <td className="py-2.5 px-4 font-sans font-bold text-slate-900">{j.account}</td>
-                          <td className="py-2.5 px-4 font-sans text-slate-600">{j.description}</td>
+                        <tr key={j.id} className="hover:bg-stone-50 transition">
+                          <td className="py-2.5 px-4 font-bold text-stone-800">{j.number}</td>
+                          <td className="py-2.5 px-3 text-stone-500">{j.date}</td>
+                          <td className="py-2.5 px-3 text-amber-700 font-semibold">{j.journal}</td>
+                          <td className="py-2.5 px-4 font-sans font-bold text-stone-900">{j.account}</td>
+                          <td className="py-2.5 px-4 font-sans text-stone-600">{j.description}</td>
                           <td className="py-2.5 px-4 text-end text-emerald-700 font-bold">
                             {j.debit > 0 ? `${j.debit.toFixed(2)} ${t.currency}` : '-'}
                           </td>
-                          <td className="py-2.5 px-4 text-end text-indigo-700 font-bold">
+                          <td className="py-2.5 px-4 text-end text-amber-700 font-bold">
                             {j.credit > 0 ? `${j.credit.toFixed(2)} ${t.currency}` : '-'}
                           </td>
                         </tr>
@@ -1605,35 +1671,35 @@ export default function AuthenticPlatform() {
       {/* EDIT COMPANY MODAL */}
       {showEditCompany && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-stone-200">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="text-base font-extrabold text-slate-900">{t.editCompanyTitle}</h3>
-              <button onClick={() => setShowEditCompany(false)} className="text-slate-400 hover:text-slate-600">
+              <h3 className="text-base font-extrabold text-stone-900">{t.editCompanyTitle}</h3>
+              <button onClick={() => setShowEditCompany(false)} className="text-stone-400 hover:text-stone-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
             <form onSubmit={handleSaveCompanyName} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.companyNameLabel}</label>
+                <label className="block font-bold text-stone-700 mb-1">{t.companyNameLabel}</label>
                 <input
                   type="text"
                   required
                   value={editedCompanyName}
                   onChange={(e) => setEditedCompanyName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-bold"
+                  className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-bold"
                 />
               </div>
               <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowEditCompany(false)}
-                  className="px-3 py-2 border rounded-lg hover:bg-slate-50"
+                  className="px-3 py-2 border rounded-lg hover:bg-stone-50"
                 >
                   {t.cancel}
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow"
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-bold rounded-lg shadow"
                 >
                   {t.saveName}
                 </button>
@@ -1646,48 +1712,48 @@ export default function AuthenticPlatform() {
       {/* MODAL 1: ADD PRODUCT */}
       {showAddProduct && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-stone-200">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="text-base font-extrabold text-slate-900">
+              <h3 className="text-base font-extrabold text-stone-900">
                 {t.modalAddProductTitle} ({currentUser.company.name})
               </h3>
-              <button onClick={() => setShowAddProduct(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowAddProduct(false)} className="text-stone-400 hover:text-stone-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateProduct} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.productNameLabel}</label>
+                <label className="block font-bold text-stone-700 mb-1">{t.productNameLabel}</label>
                 <input
                   type="text"
                   required
                   placeholder={t.productNamePlaceholder}
                   value={newProdName}
                   onChange={(e) => setNewProdName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600"
+                  className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.productSkuLabel}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.productSkuLabel}</label>
                   <input
                     type="text"
                     required
                     placeholder="ART-001"
                     value={newProdSku}
                     onChange={(e) => setNewProdSku(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                   />
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="block font-bold text-slate-700">{t.productCategoryLabel}</label>
+                    <label className="block font-bold text-stone-700">{t.productCategoryLabel}</label>
                     <button
                       type="button"
                       onClick={() => setIsAddingNewCat(!isAddingNewCat)}
-                      className="text-[11px] text-blue-600 hover:text-blue-800 font-bold"
+                      className="text-[11px] text-emerald-700 hover:text-emerald-900 font-bold"
                     >
                       {isAddingNewCat ? t.cancel : t.addNewCategory}
                     </button>
@@ -1700,7 +1766,7 @@ export default function AuthenticPlatform() {
                         placeholder={lang === 'fr' ? 'Nouvelle catégorie...' : 'اسم الفئة الجديدة...'}
                         value={customCategoryInput}
                         onChange={(e) => setCustomCategoryInput(e.target.value)}
-                        className="w-full bg-slate-50 border border-blue-500 rounded-lg p-2 outline-none font-bold text-xs"
+                        className="w-full bg-[#FAF8F5] border border-emerald-600 rounded-lg p-2 outline-none font-bold text-xs"
                         autoFocus
                       />
                       <button
@@ -1720,7 +1786,7 @@ export default function AuthenticPlatform() {
                             );
                           }
                         }}
-                        className="px-3 py-2 bg-blue-600 text-white rounded-lg font-bold text-xs hover:bg-blue-700 whitespace-nowrap shadow"
+                        className="px-3 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs hover:bg-emerald-800 whitespace-nowrap shadow"
                       >
                         OK
                       </button>
@@ -1735,14 +1801,14 @@ export default function AuthenticPlatform() {
                           setNewProdCat(e.target.value);
                         }
                       }}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600"
+                      className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600"
                     >
                       {categories.map((c) => (
                         <option key={c} value={c}>
                           {c}
                         </option>
                       ))}
-                      <option value="__ADD_NEW__" className="text-blue-600 font-bold">
+                      <option value="__ADD_NEW__" className="text-emerald-700 font-bold">
                         {t.addNewCategory}
                       </option>
                     </select>
@@ -1752,18 +1818,18 @@ export default function AuthenticPlatform() {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.initialQtyLabel}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.initialQtyLabel}</label>
                   <input
                     type="number"
                     min="0"
                     placeholder="0"
                     value={newProdQty}
                     onChange={(e) => setNewProdQty(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.costPriceLabel}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.costPriceLabel}</label>
                   <input
                     type="number"
                     min="0"
@@ -1771,11 +1837,11 @@ export default function AuthenticPlatform() {
                     placeholder="0.00"
                     value={newProdCost}
                     onChange={(e) => setNewProdCost(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.sellingPriceLabel}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.sellingPriceLabel}</label>
                   <input
                     type="number"
                     required
@@ -1784,7 +1850,7 @@ export default function AuthenticPlatform() {
                     placeholder="0.00"
                     value={newProdPrice}
                     onChange={(e) => setNewProdPrice(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                   />
                 </div>
               </div>
@@ -1793,13 +1859,13 @@ export default function AuthenticPlatform() {
                 <button
                   type="button"
                   onClick={() => setShowAddProduct(false)}
-                  className="px-4 py-2 border rounded-lg hover:bg-slate-50"
+                  className="px-4 py-2 border rounded-lg hover:bg-stone-50"
                 >
                   {t.cancel}
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow"
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-bold rounded-lg shadow"
                 >
                   {t.saveProductBtn}
                 </button>
@@ -1812,21 +1878,21 @@ export default function AuthenticPlatform() {
       {/* MODAL 2: STOCK MOVEMENT */}
       {showStockMovement && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-stone-200">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="text-base font-extrabold text-slate-900">{t.modalMovementTitle}</h3>
-              <button onClick={() => setShowStockMovement(false)} className="text-slate-400 hover:text-slate-600">
+              <h3 className="text-base font-extrabold text-stone-900">{t.modalMovementTitle}</h3>
+              <button onClick={() => setShowStockMovement(false)} className="text-stone-400 hover:text-stone-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleRecordMovement} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.selectProduct}</label>
+                <label className="block font-bold text-stone-700 mb-1">{t.selectProduct}</label>
                 <select
                   value={selectedMovementProd}
                   onChange={(e) => setSelectedMovementProd(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600"
+                  className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600"
                 >
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -1837,7 +1903,7 @@ export default function AuthenticPlatform() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.movementType}</label>
+                <label className="block font-bold text-stone-700 mb-1">{t.movementType}</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
@@ -1845,7 +1911,7 @@ export default function AuthenticPlatform() {
                     className={`py-2 text-center rounded-lg font-bold border transition ${
                       movementType === 'IN'
                         ? 'bg-emerald-50 border-emerald-600 text-emerald-700'
-                        : 'bg-slate-50 border-slate-200 text-slate-600'
+                        : 'bg-[#FAF8F5] border-stone-200 text-stone-600'
                     }`}
                   >
                     {t.typeIn}
@@ -1856,7 +1922,7 @@ export default function AuthenticPlatform() {
                     className={`py-2 text-center rounded-lg font-bold border transition ${
                       movementType === 'OUT'
                         ? 'bg-red-50 border-red-600 text-red-700'
-                        : 'bg-slate-50 border-slate-200 text-slate-600'
+                        : 'bg-[#FAF8F5] border-stone-200 text-stone-600'
                     }`}
                   >
                     {t.typeOut}
@@ -1866,7 +1932,7 @@ export default function AuthenticPlatform() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.quantity}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.quantity}</label>
                   <input
                     type="number"
                     required
@@ -1874,19 +1940,19 @@ export default function AuthenticPlatform() {
                     placeholder="1"
                     value={movementQty}
                     onChange={(e) => setMovementQty(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                   />
                 </div>
                 {movementType === 'IN' && (
                   <div>
-                    <label className="block font-bold text-slate-700 mb-1">{t.purchaseCost}</label>
+                    <label className="block font-bold text-stone-700 mb-1">{t.purchaseCost}</label>
                     <input
                       type="number"
                       step="0.01"
                       placeholder="0.00"
                       value={movementCost}
                       onChange={(e) => setMovementCost(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                      className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                     />
                   </div>
                 )}
@@ -1896,7 +1962,7 @@ export default function AuthenticPlatform() {
                 <button
                   type="button"
                   onClick={() => setShowStockMovement(false)}
-                  className="px-4 py-2 border rounded-lg hover:bg-slate-50"
+                  className="px-4 py-2 border rounded-lg hover:bg-stone-50"
                 >
                   {t.cancel}
                 </button>
@@ -1915,31 +1981,31 @@ export default function AuthenticPlatform() {
       {/* MODAL 3: NEW INVOICE */}
       {showNewInvoice && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-stone-200">
             <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="text-base font-extrabold text-slate-900">
+              <h3 className="text-base font-extrabold text-stone-900">
                 {t.modalNewInvoiceTitle} ({currentUser.company.name})
               </h3>
-              <button onClick={() => setShowNewInvoice(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setShowNewInvoice(false)} className="text-stone-400 hover:text-stone-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateInvoice} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.customerNameLabel}</label>
+                <label className="block font-bold text-stone-700 mb-1">{t.customerNameLabel}</label>
                 <input
                   type="text"
                   required
                   placeholder={lang === 'fr' ? 'Ex: Société Travaux Maroc SARL' : 'اسم العميل أو المؤسسة'}
                   value={invCustomer}
                   onChange={(e) => setInvCustomer(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600"
+                  className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">{t.customerIceLabel}</label>
+                <label className="block font-bold text-stone-700 mb-1">{t.customerIceLabel}</label>
                 <input
                   type="text"
                   required
@@ -1947,17 +2013,17 @@ export default function AuthenticPlatform() {
                   placeholder="000000000000000"
                   value={invCustomerIce}
                   onChange={(e) => setInvCustomerIce(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono tracking-widest"
+                  className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono tracking-widest"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.selectProductLabel}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.selectProductLabel}</label>
                   <select
                     value={invSelectedProduct}
                     onChange={(e) => setInvSelectedProduct(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600"
                   >
                     {products.map((p) => (
                       <option key={p.id} value={p.id}>
@@ -1967,14 +2033,14 @@ export default function AuthenticPlatform() {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">{t.invoiceQtyLabel}</label>
+                  <label className="block font-bold text-stone-700 mb-1">{t.invoiceQtyLabel}</label>
                   <input
                     type="number"
                     required
                     min="1"
                     value={invQuantity}
                     onChange={(e) => setInvQuantity(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 font-mono"
+                    className="w-full bg-[#FAF8F5] border border-stone-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 font-mono"
                   />
                 </div>
               </div>
@@ -1987,17 +2053,17 @@ export default function AuthenticPlatform() {
                 const tva = ht * 0.20;
                 const ttc = ht + tva;
                 return (
-                  <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1 font-mono text-[11px]">
+                  <div className="bg-[#FAF8F5] p-3 rounded-lg border border-stone-200 space-y-1 font-mono text-[11px]">
                     <div className="flex justify-between">
-                      <span className="font-sans text-slate-500">{t.totalHtLabel}</span>
+                      <span className="font-sans text-stone-500">{t.totalHtLabel}</span>
                       <span className="font-bold">{ht.toFixed(2)} {t.currency}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-sans text-slate-500">{t.tvaLabel}</span>
-                      <span className="font-bold text-blue-700">{tva.toFixed(2)} {t.currency}</span>
+                      <span className="font-sans text-stone-500">{t.tvaLabel}</span>
+                      <span className="font-bold text-amber-700">{tva.toFixed(2)} {t.currency}</span>
                     </div>
                     <div className="flex justify-between border-t pt-1 text-xs">
-                      <span className="font-sans font-bold text-slate-800">{t.totalTtcLabel}</span>
+                      <span className="font-sans font-bold text-stone-800">{t.totalTtcLabel}</span>
                       <span className="font-black text-emerald-700">{ttc.toFixed(2)} {t.currency}</span>
                     </div>
                   </div>
@@ -2008,13 +2074,13 @@ export default function AuthenticPlatform() {
                 <button
                   type="button"
                   onClick={() => setShowNewInvoice(false)}
-                  className="px-4 py-2 border rounded-lg hover:bg-slate-50"
+                  className="px-4 py-2 border rounded-lg hover:bg-stone-50"
                 >
                   {t.cancel}
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow"
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-bold rounded-lg shadow"
                 >
                   {t.saveInvoiceBtn}
                 </button>
@@ -2027,38 +2093,38 @@ export default function AuthenticPlatform() {
       {/* MODAL 4: PRINTABLE INVOICE VIEW */}
       {previewInvoice && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white rounded-xl max-w-2xl w-full p-8 space-y-6 shadow-2xl border text-slate-900 font-sans my-8">
+          <div className="bg-white rounded-xl max-w-2xl w-full p-8 space-y-6 shadow-2xl border text-stone-900 font-sans my-8">
             <div className="flex justify-between items-start border-b pb-4">
               <div>
-                <h1 className="text-xl font-black text-blue-800">{currentUser.company.name}</h1>
-                <p className="text-[11px] text-slate-600 mt-1">
+                <h1 className="text-xl font-black text-emerald-900">{currentUser.company.name}</h1>
+                <p className="text-[11px] text-stone-600 mt-1">
                   {currentUser.company.city ? `${currentUser.company.city} — ` : ''}{t.headquarters}
                 </p>
                 {currentUser.company.ice && (
-                  <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+                  <p className="text-[10px] text-stone-500 font-mono mt-0.5">
                     ICE: {currentUser.company.ice}
                   </p>
                 )}
               </div>
 
               <div className="text-end">
-                <span className="bg-blue-100 text-blue-800 font-black px-3 py-1 rounded text-xs block">
+                <span className="bg-amber-100 text-amber-900 font-black px-3 py-1 rounded text-xs block">
                   {t.previewFactureTitle}
                 </span>
                 <span className="text-xs font-mono font-bold block mt-1">{previewInvoice.invoiceNumber}</span>
-                <span className="text-[11px] text-slate-500 block">{t.previewInvoiceDate} {previewInvoice.date}</span>
+                <span className="text-[11px] text-stone-500 block">{t.previewInvoiceDate} {previewInvoice.date}</span>
               </div>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
-              <span className="font-bold text-slate-500 block text-[10px] uppercase">{t.clientInfoTitle}</span>
-              <div className="font-bold text-sm text-slate-800 mt-0.5">{previewInvoice.customerName}</div>
-              <div className="text-slate-600 font-mono mt-0.5">ICE: {previewInvoice.customerIce}</div>
+            <div className="bg-[#FAF8F5] p-3 rounded-lg border border-stone-200 text-xs">
+              <span className="font-bold text-stone-500 block text-[10px] uppercase">{t.clientInfoTitle}</span>
+              <div className="font-bold text-sm text-stone-800 mt-0.5">{previewInvoice.customerName}</div>
+              <div className="text-stone-600 font-mono mt-0.5">ICE: {previewInvoice.customerIce}</div>
             </div>
 
             <div className="overflow-x-auto w-full">
-              <table className="w-full min-w-[450px] text-xs text-start border border-slate-200">
-                <thead className="bg-slate-100 text-slate-800 font-bold border-b">
+              <table className="w-full min-w-[450px] text-xs text-start border border-stone-200">
+                <thead className="bg-[#F5F0E8] text-stone-800 font-bold border-b">
                   <tr>
                     <th className="py-2.5 px-3 text-start">{t.tableColDesignation}</th>
                     <th className="py-2.5 px-2 text-center">{t.tableColQty}</th>
@@ -2066,10 +2132,10 @@ export default function AuthenticPlatform() {
                     <th className="py-2.5 px-3 text-end">{t.tableColTotalHt}</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 font-mono">
+                <tbody className="divide-y divide-stone-100 font-mono">
                   {previewInvoice.lines.map((l, idx) => (
                     <tr key={idx}>
-                      <td className="py-2.5 px-3 font-sans font-medium text-slate-800">{l.productName}</td>
+                      <td className="py-2.5 px-3 font-sans font-medium text-stone-800">{l.productName}</td>
                       <td className="py-2.5 px-2 text-center">{l.quantity}</td>
                       <td className="py-2.5 px-3 text-end">{l.unitPrice.toFixed(2)} {t.currency}</td>
                       <td className="py-2.5 px-3 text-end font-bold">{l.total.toFixed(2)} {t.currency}</td>
@@ -2082,33 +2148,33 @@ export default function AuthenticPlatform() {
             <div className="flex justify-end font-mono text-xs">
               <div className="w-72 space-y-1.5 border-t pt-2">
                 <div className="flex justify-between">
-                  <span className="font-sans text-slate-600">{t.totalHtLabel}</span>
+                  <span className="font-sans text-stone-600">{t.totalHtLabel}</span>
                   <span className="font-bold">{previewInvoice.subtotalHt.toFixed(2)} {t.currency}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-sans text-slate-600">{t.tvaLabel}</span>
-                  <span className="font-bold text-blue-700">{previewInvoice.tvaAmount.toFixed(2)} {t.currency}</span>
+                  <span className="font-sans text-stone-600">{t.tvaLabel}</span>
+                  <span className="font-bold text-amber-700">{previewInvoice.tvaAmount.toFixed(2)} {t.currency}</span>
                 </div>
-                <div className="flex justify-between border-t border-slate-300 pt-1.5 text-sm font-black">
-                  <span className="font-sans text-slate-900">{t.totalTtcLabel}</span>
+                <div className="flex justify-between border-t border-stone-300 pt-1.5 text-sm font-black">
+                  <span className="font-sans text-stone-900">{t.totalTtcLabel}</span>
                   <span className="text-emerald-700">{previewInvoice.totalTtc.toFixed(2)} {t.currency}</span>
                 </div>
               </div>
             </div>
 
             <div className="pt-4 border-t flex justify-between items-center">
-              <span className="text-[10px] text-slate-400">{t.legalFooterNotice}</span>
+              <span className="text-[10px] text-stone-400">{t.legalFooterNotice}</span>
               <div className="flex gap-2">
                 <button
                   onClick={() => window.print()}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition"
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition"
                 >
                   <Printer className="h-4 w-4" />
                   <span>{t.printBtn}</span>
                 </button>
                 <button
                   onClick={() => setPreviewInvoice(null)}
-                  className="px-4 py-2 border rounded-lg text-xs font-bold hover:bg-slate-50"
+                  className="px-4 py-2 border rounded-lg text-xs font-bold hover:bg-stone-50"
                 >
                   {t.closeBtn}
                 </button>
