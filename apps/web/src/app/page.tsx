@@ -80,7 +80,21 @@ const STORAGE_CURRENT_USER = 'morocco_os_current_user_v2';
 const STORAGE_DATA_PREFIX = 'morocco_os_data_';
 const STORAGE_LANG = 'morocco_os_lang';
 
-const DEFAULT_SYSTEM_ACCOUNTS: UserAccount[] = [];
+const DEFAULT_SYSTEM_ACCOUNTS: UserAccount[] = [
+  {
+    email: 'ltdukone@gmail.com',
+    password: '33103310Mm@@',
+    fullName: 'Test Administrator',
+    role: 'SUPER_ADMIN',
+    company: {
+      name: 'SAUNERAS SARL',
+      legalForm: 'SARL',
+      ice: '003154879000045',
+      city: 'Casablanca',
+      phone: '0522001122',
+    },
+  },
+];
 
 type Language = 'fr' | 'ar';
 
@@ -492,16 +506,25 @@ export default function AuthenticPlatform() {
         localStorage.removeItem(`${STORAGE_DATA_PREFIX}contact@aquared.ma`);
       } catch {}
 
+      let currentAccounts: UserAccount[] = [];
       const storedAccounts = localStorage.getItem(STORAGE_ACCOUNTS);
       if (storedAccounts) {
         try {
-          const list: UserAccount[] = JSON.parse(storedAccounts);
-          const filtered = list.filter((a) => a.email.toLowerCase() !== 'contact@aquared.ma');
-          if (filtered.length !== list.length) {
-            localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(filtered));
-          }
+          currentAccounts = JSON.parse(storedAccounts);
         } catch {}
       }
+      currentAccounts = currentAccounts.filter((a) => a.email.toLowerCase() !== 'contact@aquared.ma');
+      DEFAULT_SYSTEM_ACCOUNTS.forEach((def) => {
+        const idx = currentAccounts.findIndex((a) => a.email.toLowerCase() === def.email.toLowerCase());
+        if (idx === -1) {
+          currentAccounts.push(def);
+        } else {
+          currentAccounts[idx] = def;
+        }
+      });
+      try {
+        localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(currentAccounts));
+      } catch {}
 
       const activeSession = localStorage.getItem(STORAGE_CURRENT_USER);
       if (activeSession) {
@@ -640,8 +663,11 @@ export default function AuthenticPlatform() {
     } catch {}
 
     DEFAULT_SYSTEM_ACCOUNTS.forEach((def) => {
-      if (!accounts.some((a) => a.email.toLowerCase() === def.email.toLowerCase())) {
+      const idx = accounts.findIndex((a) => a.email.toLowerCase() === def.email.toLowerCase());
+      if (idx === -1) {
         accounts.push(def);
+      } else {
+        accounts[idx] = def;
       }
     });
 
