@@ -466,6 +466,14 @@ export default function AuthenticPlatform() {
   const t = DICT[lang];
   const isRtl = lang === 'ar';
 
+  // Synchronize document dir and lang with current application language
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+    }
+  }, [lang, isRtl]);
+
   const triggerNotification = (message: string, type: 'success' | 'error') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 4000);
@@ -897,7 +905,7 @@ export default function AuthenticPlatform() {
   if (!currentUser) {
     return (
       <div
-        className={`min-h-screen bg-slate-900 text-slate-100 flex flex-col justify-center items-center p-4 selection:bg-blue-600 ${
+        className={`min-h-screen bg-slate-900 text-slate-100 flex flex-col justify-center items-center p-4 selection:bg-blue-600 w-full max-w-full overflow-x-hidden relative ${
           isRtl ? 'font-arabic' : 'font-sans'
         }`}
         dir={isRtl ? 'rtl' : 'ltr'}
@@ -916,7 +924,7 @@ export default function AuthenticPlatform() {
         )}
 
         {/* Clean Language Selector */}
-        <div className="fixed top-4 end-4 flex items-center bg-slate-800/90 border border-slate-700 p-1 rounded-xl shadow-lg backdrop-blur-sm z-40">
+        <div className="absolute top-4 end-4 flex items-center bg-slate-800/90 border border-slate-700 p-1 rounded-xl shadow-lg backdrop-blur-sm z-40">
           <Languages className="h-4 w-4 text-slate-400 ms-2 me-1" />
           <button
             type="button"
@@ -938,7 +946,7 @@ export default function AuthenticPlatform() {
           </button>
         </div>
 
-        <div className="max-w-md w-full space-y-6">
+        <div className="max-w-md w-full space-y-6 pt-12 sm:pt-0 my-auto">
           <div className="text-center space-y-2">
             <div className="inline-flex h-14 w-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 items-center justify-center text-white font-black text-2xl shadow-xl shadow-blue-500/20">
               MO
@@ -983,7 +991,7 @@ export default function AuthenticPlatform() {
                       placeholder="nom@entreprise.ma"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 ps-9 pe-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 ps-9 pe-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
                     />
                   </div>
                 </div>
@@ -998,7 +1006,7 @@ export default function AuthenticPlatform() {
                       placeholder="••••••••"
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 ps-9 pe-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 ps-9 pe-3 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
                     />
                   </div>
                   <p className="text-[10px] text-slate-400 mt-1.5">{t.passwordNotice}</p>
@@ -1025,7 +1033,7 @@ export default function AuthenticPlatform() {
                     placeholder={t.companyNamePlaceholder}
                     value={regCompanyName}
                     onChange={(e) => setRegCompanyName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 text-base sm:text-xs"
                   />
                 </div>
 
@@ -1037,7 +1045,7 @@ export default function AuthenticPlatform() {
                     placeholder={t.adminFullNamePlaceholder}
                     value={regFullName}
                     onChange={(e) => setRegFullName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 text-base sm:text-xs"
                   />
                 </div>
 
@@ -1049,7 +1057,7 @@ export default function AuthenticPlatform() {
                     placeholder={t.emailPlaceholder}
                     value={regAdminEmail}
                     onChange={(e) => setRegAdminEmail(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
                   />
                 </div>
 
@@ -1062,7 +1070,7 @@ export default function AuthenticPlatform() {
                     placeholder={t.passwordPlaceholder}
                     value={regAdminPassword}
                     onChange={(e) => setRegAdminPassword(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
                   />
                 </div>
 
@@ -1074,7 +1082,7 @@ export default function AuthenticPlatform() {
                       placeholder={t.cityPlaceholder}
                       value={regCity}
                       onChange={(e) => setRegCity(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 text-base sm:text-xs"
                     />
                   </div>
                   <div>
@@ -1084,7 +1092,7 @@ export default function AuthenticPlatform() {
                       placeholder={t.phonePlaceholder}
                       value={regPhone}
                       onChange={(e) => setRegPhone(e.target.value)}
-                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono"
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono text-base sm:text-xs"
                     />
                   </div>
                 </div>
@@ -1097,7 +1105,7 @@ export default function AuthenticPlatform() {
                     placeholder={t.icePlaceholder}
                     value={regIce}
                     onChange={(e) => setRegIce(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono tracking-widest"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white placeholder-slate-500 outline-none focus:border-blue-500 font-mono tracking-widest text-base sm:text-xs"
                   />
                 </div>
 
@@ -1121,7 +1129,7 @@ export default function AuthenticPlatform() {
   // =========================================================================
   return (
     <div
-      className={`min-h-screen bg-slate-50 text-slate-900 pb-20 ${isRtl ? 'font-arabic' : 'font-sans'}`}
+      className={`min-h-screen bg-slate-50 text-slate-900 pb-20 w-full max-w-full overflow-x-hidden ${isRtl ? 'font-arabic' : 'font-sans'}`}
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {notification && (
@@ -1138,47 +1146,49 @@ export default function AuthenticPlatform() {
       )}
 
       {/* Main Top Header */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-3">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-700 to-cyan-500 flex items-center justify-center text-white font-black text-lg shadow">
-              {currentUser.company.name.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-base text-slate-900">{currentUser.company.name}</span>
-                <button
-                  onClick={() => {
-                    setEditedCompanyName(currentUser.company.name);
-                    setShowEditCompany(true);
-                  }}
-                  className="p-1 text-slate-400 hover:text-blue-600 transition"
-                  title={t.editCompanyTitle}
-                >
-                  <Edit2 className="h-3.5 w-3.5" />
-                </button>
-                <span className="bg-emerald-50 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1 shadow-2xs">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>{t.activeBadge}</span>
-                </span>
+      <header className="border-b border-slate-200 bg-white sticky top-0 z-30 shadow-sm w-full max-w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-tr from-blue-700 to-cyan-500 flex items-center justify-center text-white font-black text-lg shadow">
+                {currentUser.company.name.slice(0, 2).toUpperCase()}
               </div>
-              <p className="text-[11px] text-slate-500 flex items-center gap-1 font-medium mt-0.5">
-                <MapPin className="h-3 w-3 text-red-500" />
-                <span>{currentUser.company.city ? `${currentUser.company.city} — ` : ''}{t.headquarters}</span>
-                {currentUser.company.ice && (
-                  <span className="text-[10px] text-slate-400 font-mono ms-2">ICE: {currentUser.company.ice}</span>
-                )}
-              </p>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-extrabold text-base text-slate-900 truncate max-w-[180px] sm:max-w-none">{currentUser.company.name}</span>
+                  <button
+                    onClick={() => {
+                      setEditedCompanyName(currentUser.company.name);
+                      setShowEditCompany(true);
+                    }}
+                    className="p-1 text-slate-400 hover:text-blue-600 transition shrink-0"
+                    title={t.editCompanyTitle}
+                  >
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </button>
+                  <span className="bg-emerald-50 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1 shadow-2xs shrink-0">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                    <span>{t.activeBadge}</span>
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 flex items-center gap-1 font-medium mt-0.5 flex-wrap">
+                  <MapPin className="h-3 w-3 text-red-500 shrink-0" />
+                  <span>{currentUser.company.city ? `${currentUser.company.city} — ` : ''}{t.headquarters}</span>
+                  {currentUser.company.ice && (
+                    <span className="text-[10px] text-slate-400 font-mono ms-1">ICE: {currentUser.company.ice}</span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 sm:gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
             {/* Language Selector */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+            <div className="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200 text-xs font-bold">
               <button
                 type="button"
                 onClick={() => changeLanguage('fr')}
-                className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg transition flex items-center gap-1 text-xs ${
                   lang === 'fr'
                     ? 'bg-white text-blue-700 shadow-sm font-black'
                     : 'text-slate-500 hover:text-slate-900'
@@ -1189,7 +1199,7 @@ export default function AuthenticPlatform() {
               <button
                 type="button"
                 onClick={() => changeLanguage('ar')}
-                className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1 ${
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg transition flex items-center gap-1 text-xs ${
                   lang === 'ar'
                     ? 'bg-white text-blue-700 shadow-sm font-black'
                     : 'text-slate-500 hover:text-slate-900'
@@ -1199,14 +1209,14 @@ export default function AuthenticPlatform() {
               </button>
             </div>
 
-            <div className="hidden md:flex flex-col text-xs text-end bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+            <div className="hidden lg:flex flex-col text-xs text-end bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
               <span className="font-bold text-slate-800">{currentUser.fullName}</span>
               <span className="text-slate-500 font-mono text-[11px]">{currentUser.email}</span>
             </div>
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-lg border border-red-200 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold rounded-lg border border-red-200 transition shrink-0"
               title={t.logout}
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -1216,7 +1226,7 @@ export default function AuthenticPlatform() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 rtl:space-x-reverse border-t border-slate-100 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-2 rtl:space-x-reverse border-t border-slate-100 overflow-x-auto scrollbar-none py-1">
           {[
             { id: 'dashboard', label: t.tabDashboard, icon: TrendingUp },
             { id: 'inventory', label: t.tabInventory, icon: Package },
@@ -1464,42 +1474,44 @@ export default function AuthenticPlatform() {
               </div>
             ) : (
               <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <table className="w-full text-xs text-start">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
-                    <tr>
-                      <th className="py-3 px-4 text-start">{t.invTableNumber}</th>
-                      <th className="py-3 px-4 text-start">{t.invTableCustomer}</th>
-                      <th className="py-3 px-3 text-start">{t.invTableIce}</th>
-                      <th className="py-3 px-3 text-start">{t.invTableDate}</th>
-                      <th className="py-3 px-3 text-end">{t.invTableSubtotal}</th>
-                      <th className="py-3 px-3 text-end">{t.invTableTva}</th>
-                      <th className="py-3 px-3 text-end">{t.invTableTotalTtc}</th>
-                      <th className="py-3 px-4 text-center">{t.invTableActions}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-mono">
-                    {invoices.map((inv) => (
-                      <tr key={inv.id} className="hover:bg-slate-50 transition">
-                        <td className="py-3.5 px-4 font-black text-blue-700">{inv.invoiceNumber}</td>
-                        <td className="py-3.5 px-4 font-sans font-bold text-slate-900">{inv.customerName}</td>
-                        <td className="py-3.5 px-3 text-slate-500 text-[11px]">{inv.customerIce}</td>
-                        <td className="py-3.5 px-3 text-slate-600">{inv.date}</td>
-                        <td className="py-3.5 px-3 text-end text-slate-800 font-semibold">{inv.subtotalHt.toFixed(2)} {t.currency}</td>
-                        <td className="py-3.5 px-3 text-end text-slate-600">{inv.tvaAmount.toFixed(2)} {t.currency}</td>
-                        <td className="py-3.5 px-3 text-end text-emerald-700 font-black">{inv.totalTtc.toFixed(2)} {t.currency}</td>
-                        <td className="py-3.5 px-4 text-center">
-                          <button
-                            onClick={() => setPreviewInvoice(inv)}
-                            className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded flex items-center gap-1 mx-auto transition"
-                          >
-                            <Printer className="h-3 w-3" />
-                            <span>{t.printInvoice}</span>
-                          </button>
-                        </td>
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full min-w-[700px] text-xs text-start">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                      <tr>
+                        <th className="py-3 px-4 text-start">{t.invTableNumber}</th>
+                        <th className="py-3 px-4 text-start">{t.invTableCustomer}</th>
+                        <th className="py-3 px-3 text-start">{t.invTableIce}</th>
+                        <th className="py-3 px-3 text-start">{t.invTableDate}</th>
+                        <th className="py-3 px-3 text-end">{t.invTableSubtotal}</th>
+                        <th className="py-3 px-3 text-end">{t.invTableTva}</th>
+                        <th className="py-3 px-3 text-end">{t.invTableTotalTtc}</th>
+                        <th className="py-3 px-4 text-center">{t.invTableActions}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-mono">
+                      {invoices.map((inv) => (
+                        <tr key={inv.id} className="hover:bg-slate-50 transition">
+                          <td className="py-3.5 px-4 font-black text-blue-700">{inv.invoiceNumber}</td>
+                          <td className="py-3.5 px-4 font-sans font-bold text-slate-900">{inv.customerName}</td>
+                          <td className="py-3.5 px-3 text-slate-500 text-[11px]">{inv.customerIce}</td>
+                          <td className="py-3.5 px-3 text-slate-600">{inv.date}</td>
+                          <td className="py-3.5 px-3 text-end text-slate-800 font-semibold">{inv.subtotalHt.toFixed(2)} {t.currency}</td>
+                          <td className="py-3.5 px-3 text-end text-slate-600">{inv.tvaAmount.toFixed(2)} {t.currency}</td>
+                          <td className="py-3.5 px-3 text-end text-emerald-700 font-black">{inv.totalTtc.toFixed(2)} {t.currency}</td>
+                          <td className="py-3.5 px-4 text-center">
+                            <button
+                              onClick={() => setPreviewInvoice(inv)}
+                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded flex items-center gap-1 mx-auto transition"
+                            >
+                              <Printer className="h-3 w-3" />
+                              <span>{t.printInvoice}</span>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>
@@ -1528,36 +1540,38 @@ export default function AuthenticPlatform() {
               </div>
             ) : (
               <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <table className="w-full text-xs text-start">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
-                    <tr>
-                      <th className="py-3 px-4 text-start">{t.journalEntryNum}</th>
-                      <th className="py-3 px-3 text-start">{t.journalDate}</th>
-                      <th className="py-3 px-3 text-start">{t.journalCode}</th>
-                      <th className="py-3 px-4 text-start">{t.journalAccount}</th>
-                      <th className="py-3 px-4 text-start">{t.journalLibelle}</th>
-                      <th className="py-3 px-4 text-end">{t.journalDebit}</th>
-                      <th className="py-3 px-4 text-end">{t.journalCredit}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-mono">
-                    {journalEntries.map((j) => (
-                      <tr key={j.id} className="hover:bg-slate-50 transition">
-                        <td className="py-2.5 px-4 font-bold text-slate-800">{j.number}</td>
-                        <td className="py-2.5 px-3 text-slate-500">{j.date}</td>
-                        <td className="py-2.5 px-3 text-blue-700 font-semibold">{j.journal}</td>
-                        <td className="py-2.5 px-4 font-sans font-bold text-slate-900">{j.account}</td>
-                        <td className="py-2.5 px-4 font-sans text-slate-600">{j.description}</td>
-                        <td className="py-2.5 px-4 text-end text-emerald-700 font-bold">
-                          {j.debit > 0 ? `${j.debit.toFixed(2)} ${t.currency}` : '-'}
-                        </td>
-                        <td className="py-2.5 px-4 text-end text-indigo-700 font-bold">
-                          {j.credit > 0 ? `${j.credit.toFixed(2)} ${t.currency}` : '-'}
-                        </td>
+                <div className="overflow-x-auto w-full">
+                  <table className="w-full min-w-[700px] text-xs text-start">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                      <tr>
+                        <th className="py-3 px-4 text-start">{t.journalEntryNum}</th>
+                        <th className="py-3 px-3 text-start">{t.journalDate}</th>
+                        <th className="py-3 px-3 text-start">{t.journalCode}</th>
+                        <th className="py-3 px-4 text-start">{t.journalAccount}</th>
+                        <th className="py-3 px-4 text-start">{t.journalLibelle}</th>
+                        <th className="py-3 px-4 text-end">{t.journalDebit}</th>
+                        <th className="py-3 px-4 text-end">{t.journalCredit}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-mono">
+                      {journalEntries.map((j) => (
+                        <tr key={j.id} className="hover:bg-slate-50 transition">
+                          <td className="py-2.5 px-4 font-bold text-slate-800">{j.number}</td>
+                          <td className="py-2.5 px-3 text-slate-500">{j.date}</td>
+                          <td className="py-2.5 px-3 text-blue-700 font-semibold">{j.journal}</td>
+                          <td className="py-2.5 px-4 font-sans font-bold text-slate-900">{j.account}</td>
+                          <td className="py-2.5 px-4 font-sans text-slate-600">{j.description}</td>
+                          <td className="py-2.5 px-4 text-end text-emerald-700 font-bold">
+                            {j.debit > 0 ? `${j.debit.toFixed(2)} ${t.currency}` : '-'}
+                          </td>
+                          <td className="py-2.5 px-4 text-end text-indigo-700 font-bold">
+                            {j.credit > 0 ? `${j.credit.toFixed(2)} ${t.currency}` : '-'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </div>
@@ -2018,26 +2032,28 @@ export default function AuthenticPlatform() {
               <div className="text-slate-600 font-mono mt-0.5">ICE: {previewInvoice.customerIce}</div>
             </div>
 
-            <table className="w-full text-xs text-start border border-slate-200">
-              <thead className="bg-slate-100 text-slate-800 font-bold border-b">
-                <tr>
-                  <th className="py-2.5 px-3 text-start">{t.tableColDesignation}</th>
-                  <th className="py-2.5 px-2 text-center">{t.tableColQty}</th>
-                  <th className="py-2.5 px-3 text-end">{t.tableColUnitPrice}</th>
-                  <th className="py-2.5 px-3 text-end">{t.tableColTotalHt}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-mono">
-                {previewInvoice.lines.map((l, idx) => (
-                  <tr key={idx}>
-                    <td className="py-2.5 px-3 font-sans font-medium text-slate-800">{l.productName}</td>
-                    <td className="py-2.5 px-2 text-center">{l.quantity}</td>
-                    <td className="py-2.5 px-3 text-end">{l.unitPrice.toFixed(2)} {t.currency}</td>
-                    <td className="py-2.5 px-3 text-end font-bold">{l.total.toFixed(2)} {t.currency}</td>
+            <div className="overflow-x-auto w-full">
+              <table className="w-full min-w-[450px] text-xs text-start border border-slate-200">
+                <thead className="bg-slate-100 text-slate-800 font-bold border-b">
+                  <tr>
+                    <th className="py-2.5 px-3 text-start">{t.tableColDesignation}</th>
+                    <th className="py-2.5 px-2 text-center">{t.tableColQty}</th>
+                    <th className="py-2.5 px-3 text-end">{t.tableColUnitPrice}</th>
+                    <th className="py-2.5 px-3 text-end">{t.tableColTotalHt}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  {previewInvoice.lines.map((l, idx) => (
+                    <tr key={idx}>
+                      <td className="py-2.5 px-3 font-sans font-medium text-slate-800">{l.productName}</td>
+                      <td className="py-2.5 px-2 text-center">{l.quantity}</td>
+                      <td className="py-2.5 px-3 text-end">{l.unitPrice.toFixed(2)} {t.currency}</td>
+                      <td className="py-2.5 px-3 text-end font-bold">{l.total.toFixed(2)} {t.currency}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             <div className="flex justify-end font-mono text-xs">
               <div className="w-72 space-y-1.5 border-t pt-2">
