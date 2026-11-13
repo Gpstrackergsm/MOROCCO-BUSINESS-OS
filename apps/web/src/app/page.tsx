@@ -80,21 +80,7 @@ const STORAGE_CURRENT_USER = 'morocco_os_current_user_v2';
 const STORAGE_DATA_PREFIX = 'morocco_os_data_';
 const STORAGE_LANG = 'morocco_os_lang';
 
-const DEFAULT_SYSTEM_ACCOUNTS: UserAccount[] = [
-  {
-    email: 'contact@aquared.ma',
-    password: 'Password123!',
-    fullName: 'Khalid Aitelmaati',
-    role: 'SUPER_ADMIN',
-    company: {
-      name: 'AQUARED SARL',
-      legalForm: 'SARL',
-      ice: '002894512000073',
-      city: 'Marrakech',
-      phone: '0524014891',
-    },
-  },
-];
+const DEFAULT_SYSTEM_ACCOUNTS: UserAccount[] = [];
 
 type Language = 'fr' | 'ar';
 
@@ -122,7 +108,7 @@ const DICT = {
     createAccountTab: "Créer un compte",
     loginTab: "Connexion",
     companyNameLabel: "Raison Sociale de l'entreprise *",
-    companyNamePlaceholder: "Ex: AQUARED SARL",
+    companyNamePlaceholder: "Ex: ATLAS COMMERCE SARL",
     adminFullNameLabel: "Nom complet du gérant *",
     adminFullNamePlaceholder: "Nom et Prénom",
     emailLabel: "Adresse e-mail professionnelle *",
@@ -501,28 +487,32 @@ export default function AuthenticPlatform() {
         setNewProdCat(DEFAULT_CATEGORIES[savedLang][0] || '');
       }
 
-      const activeSession = localStorage.getItem(STORAGE_CURRENT_USER);
-      if (activeSession) {
-        const user: UserAccount = JSON.parse(activeSession);
-        setCurrentUser(user);
-        loadUserData(user.email);
-      }
+      // Purge deleted system accounts from browser cache
+      try {
+        localStorage.removeItem(`${STORAGE_DATA_PREFIX}contact@aquared.ma`);
+      } catch {}
 
       const storedAccounts = localStorage.getItem(STORAGE_ACCOUNTS);
-      if (!storedAccounts) {
-        localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(DEFAULT_SYSTEM_ACCOUNTS));
-      } else {
+      if (storedAccounts) {
         try {
           const list: UserAccount[] = JSON.parse(storedAccounts);
-          let changed = false;
-          DEFAULT_SYSTEM_ACCOUNTS.forEach((def) => {
-            if (!list.some((a) => a.email.toLowerCase() === def.email.toLowerCase())) {
-              list.push(def);
-              changed = true;
-            }
-          });
-          if (changed) {
-            localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(list));
+          const filtered = list.filter((a) => a.email.toLowerCase() !== 'contact@aquared.ma');
+          if (filtered.length !== list.length) {
+            localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(filtered));
+          }
+        } catch {}
+      }
+
+      const activeSession = localStorage.getItem(STORAGE_CURRENT_USER);
+      if (activeSession) {
+        try {
+          const user: UserAccount = JSON.parse(activeSession);
+          if (user.email.toLowerCase() === 'contact@aquared.ma') {
+            localStorage.removeItem(STORAGE_CURRENT_USER);
+            setCurrentUser(null);
+          } else {
+            setCurrentUser(user);
+            loadUserData(user.email);
           }
         } catch {}
       }
@@ -654,6 +644,8 @@ export default function AuthenticPlatform() {
         accounts.push(def);
       }
     });
+
+    accounts = accounts.filter((a) => a.email.toLowerCase() !== 'contact@aquared.ma');
 
     const found = accounts.find((a) => a.email.toLowerCase() === loginEmail.trim().toLowerCase());
 
