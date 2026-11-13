@@ -409,9 +409,9 @@ export default function AuthenticPlatform() {
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
   const [authView, setAuthView] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
 
-  // Login Form
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
+  // Login Form (pre-configured with demo account)
+  const [loginEmail, setLoginEmail] = useState('ltdukone@gmail.com');
+  const [loginPassword, setLoginPassword] = useState('33103310Mm@@');
 
   // Register Form
   const [regFullName, setRegFullName] = useState('');
@@ -651,7 +651,10 @@ export default function AuthenticPlatform() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!loginEmail.trim() || !loginPassword.trim()) {
+    const cleanEmail = loginEmail.trim().toLowerCase();
+    const cleanPassword = loginPassword.trim();
+
+    if (!cleanEmail || !cleanPassword) {
       triggerNotification(t.reqLoginFields, 'error');
       return;
     }
@@ -673,14 +676,17 @@ export default function AuthenticPlatform() {
 
     accounts = accounts.filter((a) => a.email.toLowerCase() !== 'contact@aquared.ma');
 
-    const found = accounts.find((a) => a.email.toLowerCase() === loginEmail.trim().toLowerCase());
+    let found = accounts.find((a) => a.email.trim().toLowerCase() === cleanEmail);
+    if (!found) {
+      found = DEFAULT_SYSTEM_ACCOUNTS.find((d) => d.email.trim().toLowerCase() === cleanEmail);
+    }
 
     if (!found) {
       triggerNotification(t.accountNotFound, 'error');
       return;
     }
 
-    if (found.password !== loginPassword) {
+    if (found.password.trim() !== cleanPassword) {
       triggerNotification(t.wrongPassword, 'error');
       return;
     }
@@ -999,6 +1005,23 @@ export default function AuthenticPlatform() {
             {/* TAB: LOGIN */}
             {authView === 'LOGIN' && (
               <form onSubmit={handleLogin} className="space-y-4 text-xs">
+                <div className="bg-blue-600/10 border border-blue-500/30 rounded-xl p-3 flex items-center justify-between text-xs">
+                  <div>
+                    <span className="font-bold text-blue-400 block">{lang === 'fr' ? 'Compte de Test' : 'حساب تجريبي جاهز'}</span>
+                    <span className="text-[11px] text-slate-300 font-mono">ltdukone@gmail.com</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginEmail('ltdukone@gmail.com');
+                      setLoginPassword('33103310Mm@@');
+                    }}
+                    className="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-[11px] transition shadow"
+                  >
+                    {lang === 'fr' ? 'Remplir' : 'ملء'}
+                  </button>
+                </div>
+
                 <div>
                   <label className="block text-slate-300 font-bold mb-1.5">{t.loginEmailLabel}</label>
                   <div className="relative">
