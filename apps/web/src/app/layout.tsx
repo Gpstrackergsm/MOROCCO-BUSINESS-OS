@@ -4,6 +4,11 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Sauneras — نظام إدارة الأعمال المتكامل',
   description: 'Sauneras — منصة ERP سحابية متكاملة للشركات المغربية',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export const viewport: Viewport = {
@@ -21,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="fr" dir="ltr" className="w-full max-w-full overflow-x-hidden">
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

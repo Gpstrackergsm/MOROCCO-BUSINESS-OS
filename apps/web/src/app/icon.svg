@@ -1,0 +1,45 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#064E3B" />
+      <stop offset="55%" stop-color="#047857" />
+      <stop offset="100%" stop-color="#115E59" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE68A" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="saunerasGold" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE68A" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#EA580C" />
+    </linearGradient>
+    <linearGradient id="saunerasMint" x1="14" y1="12" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A7F3D0" />
+      <stop offset="100%" stop-color="#34D399" />
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2.5" />
+  <path
+    d="M32 8L52 19.2V44.8L32 56L12 44.8V19.2L32 8Z"
+    stroke="url(#saunerasGold)"
+    stroke-width="2.6"
+    stroke-linejoin="round"
+    fill="rgba(255,255,255,0.04)"
+  />
+  <path
+    d="M38.5 21.5C38.5 21.5 35 18.5 30 18.5C25 18.5 22 21.2 22 24.5C22 31.2 41.5 28.8 41.5 37.5C41.5 42 37.2 45.5 31 45.5C25.5 45.5 22 42 22 42"
+    stroke="url(#saunerasGold)"
+    stroke-width="4.5"
+    stroke-linecap="round"
+  />
+  <path
+    d="M32 14.5L45 22V42L32 49.5L19 42V22L32 14.5Z"
+    stroke="url(#saunerasMint)"
+    stroke-width="1.4"
+    stroke-opacity="0.55"
+    stroke-dasharray="3.5 2.5"
+  />
+  <circle cx="32" cy="14" r="2.5" fill="#FDE68A" />
+</svg>
