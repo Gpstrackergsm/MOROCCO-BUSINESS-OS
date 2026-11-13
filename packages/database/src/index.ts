@@ -1,1 +1,1 @@
-export * from './seed-data.js';
+export * from './seed-data';
