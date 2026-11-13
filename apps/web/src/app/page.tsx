@@ -80,6 +80,22 @@ const STORAGE_CURRENT_USER = 'morocco_os_current_user_v2';
 const STORAGE_DATA_PREFIX = 'morocco_os_data_';
 const STORAGE_LANG = 'morocco_os_lang';
 
+const DEFAULT_SYSTEM_ACCOUNTS: UserAccount[] = [
+  {
+    email: 'contact@aquared.ma',
+    password: 'Password123!',
+    fullName: 'Khalid Aitelmaati',
+    role: 'SUPER_ADMIN',
+    company: {
+      name: 'AQUARED SARL',
+      legalForm: 'SARL',
+      ice: '002894512000073',
+      city: 'Marrakech',
+      phone: '0524014891',
+    },
+  },
+];
+
 type Language = 'fr' | 'ar';
 
 const DEFAULT_CATEGORIES: Record<Language, string[]> = {
@@ -483,6 +499,25 @@ export default function AuthenticPlatform() {
         setCurrentUser(user);
         loadUserData(user.email);
       }
+
+      const storedAccounts = localStorage.getItem(STORAGE_ACCOUNTS);
+      if (!storedAccounts) {
+        localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(DEFAULT_SYSTEM_ACCOUNTS));
+      } else {
+        try {
+          const list: UserAccount[] = JSON.parse(storedAccounts);
+          let changed = false;
+          DEFAULT_SYSTEM_ACCOUNTS.forEach((def) => {
+            if (!list.some((a) => a.email.toLowerCase() === def.email.toLowerCase())) {
+              list.push(def);
+              changed = true;
+            }
+          });
+          if (changed) {
+            localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(list));
+          }
+        } catch {}
+      }
     } catch (err) {
       console.error('Error loading session:', err);
     }
@@ -605,6 +640,12 @@ export default function AuthenticPlatform() {
       const stored = localStorage.getItem(STORAGE_ACCOUNTS);
       if (stored) accounts = JSON.parse(stored);
     } catch {}
+
+    DEFAULT_SYSTEM_ACCOUNTS.forEach((def) => {
+      if (!accounts.some((a) => a.email.toLowerCase() === def.email.toLowerCase())) {
+        accounts.push(def);
+      }
+    });
 
     const found = accounts.find((a) => a.email.toLowerCase() === loginEmail.trim().toLowerCase());
 
