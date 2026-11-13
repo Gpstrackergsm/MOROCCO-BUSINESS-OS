@@ -117,7 +117,7 @@ const DEFAULT_CATEGORIES: Record<Language, string[]> = {
 
 const DICT = {
   fr: {
-    appTitle: "MOROCCO BUSINESS OS",
+    appTitle: "Sauneras",
     appSubtitle: "Système de Gestion Commerciale pour Entreprises Marocaines",
     createAccountTab: "Créer un compte",
     loginTab: "Connexion",
@@ -260,7 +260,7 @@ const DICT = {
     accountCreatedSuccess: "Compte entreprise créé avec succès !",
   },
   ar: {
-    appTitle: "MOROCCO BUSINESS OS",
+    appTitle: "Sauneras",
     appSubtitle: "نظام تشغيل وإدارة الأعمال السحابي للشركات المغربية",
     createAccountTab: "إنشاء حساب جديد",
     loginTab: "تسجيل الدخول",
@@ -973,7 +973,7 @@ export default function AuthenticPlatform() {
         <div className="max-w-md w-full space-y-6 pt-12 sm:pt-0 my-auto">
           <div className="text-center space-y-2">
             <div className="inline-flex h-14 w-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 items-center justify-center text-white font-black text-2xl shadow-xl shadow-blue-500/20">
-              MO
+              SA
             </div>
             <h1 className="text-2xl font-black tracking-tight text-white">{t.appTitle}</h1>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">{t.appSubtitle}</p>

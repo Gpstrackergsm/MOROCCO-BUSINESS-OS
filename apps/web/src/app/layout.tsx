@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Morocco Business OS — نظام إدارة الأعمال المتكامل',
-  description: 'منصة ERP سحابية متكاملة للشركات المغربية — Cloud Multi-Tenant ERP SaaS for Morocco',
+  title: 'Sauneras — نظام إدارة الأعمال المتكامل',
+  description: 'Sauneras — منصة ERP سحابية متكاملة للشركات المغربية',
 };
 
 export const viewport: Viewport = {
